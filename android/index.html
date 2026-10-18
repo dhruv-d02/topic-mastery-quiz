@@ -1,0 +1,1651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Android Mastery 50</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky progress header; course map rail (left) + one lesson card at a time (right); rail stacks above on phones */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --surface-2: #eaeef4;
+  --ink: #18202c;
+  --ink-2: #4a5568;
+  --line: #d5dbe5;
+  --accent: #1f5fad;
+  --accent-soft: #e2ecf8;
+  --gotcha: #a85410;
+  --gotcha-soft: #fbefe2;
+  --ok: #1d7a46;
+  --ok-soft: #e1f3e8;
+  --bad: #b3261e;
+  --bad-soft: #fbe7e5;
+  --code-bg: #f7f8fb;
+  --code-ink: #222a36;
+  --k: #7a3fb0; --s: #1d7a46; --c: #7b8494; --a: #a85410; --n: #1f5fad; --t: #0f6f80;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #181e27; --surface-2: #212834; --ink: #e6eaf0; --ink-2: #a3adbd; --line: #2e3746;
+    --accent: #7fb0f0; --accent-soft: #1d2b40; --gotcha: #f0a865; --gotcha-soft: #33251a;
+    --ok: #6fd39a; --ok-soft: #17301f; --bad: #f2897f; --bad-soft: #3a1d1b;
+    --code-bg: #0d1117; --code-ink: #dbe2ec;
+    --k: #c79bf2; --s: #7fd6a0; --c: #7d8797; --a: #f0a865; --n: #7fb0f0; --t: #6cd0de;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #181e27; --surface-2: #212834; --ink: #e6eaf0; --ink-2: #a3adbd; --line: #2e3746;
+  --accent: #7fb0f0; --accent-soft: #1d2b40; --gotcha: #f0a865; --gotcha-soft: #33251a;
+  --ok: #6fd39a; --ok-soft: #17301f; --bad: #f2897f; --bad-soft: #3a1d1b;
+  --code-bg: #0d1117; --code-ink: #dbe2ec;
+  --k: #c79bf2; --s: #7fd6a0; --c: #7d8797; --a: #f0a865; --n: #7fb0f0; --t: #6cd0de;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.2; }
+
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.topbar-inner { max-width: 1180px; margin: 0 auto; padding-block: 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.brand { display: flex; flex-direction: column; min-width: 0; }
+.brand h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+.brand span { font-size: 0.8rem; color: var(--ink-2); }
+.progress { flex: 1 1 260px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.progress-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; display: flex; }
+.bar i { display: block; height: 100%; transition: width .3s ease; }
+.bar .b-ok { background: var(--ok); }
+.bar .b-bad { background: var(--bad); }
+.top-actions { display: flex; gap: 8px; }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 7px 14px; font-size: 0.875rem; font-weight: 500; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.danger { color: var(--bad); }
+.btn.danger.armed { background: var(--bad); color: var(--surface); border-color: var(--bad); }
+
+.layout { max-width: 1180px; margin: 0 auto; padding-block: 24px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 28px; align-items: start; }
+.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 84px); display: flex; flex-direction: column; gap: 20px; max-height: calc(100vh - 110px); overflow: auto; padding-right: 4px; }
+.rail-toggle { display: none; }
+.label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 8px; }
+.seg { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface-2); border-radius: 8px; padding: 3px; gap: 2px; }
+.seg button { border: 0; background: transparent; border-radius: 6px; padding: 6px 4px; font-size: 0.8rem; font-weight: 500; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / .08); }
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.stack-row { display: flex; flex-direction: column; gap: 4px; }
+.stack-row small { font-size: 0.72rem; color: var(--ink-2); }
+.cells { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.cell { aspect-ratio: 1; max-width: 100%; border-radius: 5px; border: 1px solid var(--line); background: var(--surface); font-size: 0.66rem; font-family: var(--font-mono); padding: 0; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.cell.ok { background: var(--ok); border-color: var(--ok); color: var(--surface); }
+.cell.bad { background: var(--bad); border-color: var(--bad); color: var(--surface); }
+.cell.current { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cell.dim { opacity: .3; }
+.modules { display: flex; flex-direction: column; gap: 2px; }
+.modules button { display: flex; justify-content: space-between; gap: 8px; align-items: center; border: 0; background: transparent; text-align: left; padding: 6px 8px; border-radius: 6px; font-size: 0.86rem; }
+.modules button:hover { background: var(--surface-2); }
+.modules button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.modules em { font-style: normal; font-size: 0.75rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.mode-note { font-size: 0.8rem; color: var(--ink-2); background: var(--surface-2); padding: 8px 10px; border-radius: 8px; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px clamp(18px, 4vw, 36px); display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 0.8rem; color: var(--ink-2); }
+.qno { font-family: var(--font-mono); font-weight: 600; color: var(--ink); }
+.pill { border-radius: 99px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border: 1px solid var(--line); }
+.pill.easy { color: var(--ok); border-color: currentColor; }
+.pill.medium { color: var(--accent); border-color: currentColor; }
+.pill.hard { color: var(--gotcha); border-color: currentColor; }
+.concept { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; letter-spacing: -0.015em; }
+.summary { max-width: 68ch; margin: 0; }
+.keypoints { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 4px; max-width: 68ch; }
+.keypoints li::marker { color: var(--accent); }
+
+.code { position: relative; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; min-width: 0; }
+.code-head { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px 6px 14px; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-2); }
+.code-head button { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 2px 10px; font-size: 0.75rem; }
+.code pre { margin: 0; padding: 14px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.55; color: var(--code-ink); tab-size: 4; }
+.tk-k { color: var(--k); font-weight: 600; } .tk-s { color: var(--s); } .tk-c { color: var(--c); font-style: italic; } .tk-a { color: var(--a); } .tk-n { color: var(--n); } .tk-t { color: var(--t); }
+
+.divider { display: flex; align-items: center; gap: 12px; color: var(--ink-2); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.question { font-size: 1.08rem; font-weight: 600; margin: 0; max-width: 70ch; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+.opt { display: flex; gap: 12px; align-items: flex-start; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 11px 14px; transition: border-color .15s, background .15s; min-width: 0; }
+.opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.opt:disabled { cursor: default; }
+.opt b { font-family: var(--font-mono); flex: none; width: 1.6em; height: 1.6em; border-radius: 5px; display: grid; place-items: center; font-size: 0.78rem; background: var(--surface-2); }
+.opt span { min-width: 0; overflow-wrap: anywhere; }
+.opt.correct { border-color: var(--ok); background: var(--ok-soft); }
+.opt.correct b { background: var(--ok); color: var(--surface); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt.wrong b { background: var(--bad); color: var(--surface); }
+.opt.muted { opacity: .62; }
+
+.feedback { display: flex; flex-direction: column; gap: 14px; border-top: 1px solid var(--line); padding-top: 18px; }
+.verdict { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+.verdict.ok { color: var(--ok); } .verdict.bad { color: var(--bad); }
+.fb-block h3 { font-family: var(--font-body); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 4px; }
+.fb-block p { margin: 0; max-width: 70ch; }
+.why-wrong { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.why-wrong li { display: flex; gap: 10px; max-width: 70ch; }
+.why-wrong code { font-family: var(--font-mono); font-weight: 600; color: var(--bad); flex: none; }
+.gotcha { background: var(--gotcha-soft); border-radius: 8px; padding: 12px 14px; }
+.gotcha h3 { color: var(--gotcha); }
+.recap { border-left: 3px solid var(--accent); padding: 4px 0 4px 12px; font-weight: 600; }
+
+.nav { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; align-items: center; }
+.hint { font-size: 0.75rem; color: var(--ink-2); }
+kbd { font-family: var(--font-mono); font-size: 0.72rem; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; background: var(--surface-2); }
+
+.big { font-family: var(--font-display); font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.big small { font-size: 0.4em; color: var(--ink-2); font-weight: 500; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.stat { background: var(--surface-2); border-radius: 8px; padding: 12px 14px; }
+.stat strong { display: block; font-family: var(--font-display); font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 0.8rem; color: var(--ink-2); }
+.mod-bars { display: flex; flex-direction: column; gap: 10px; }
+.mod-bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; font-size: 0.86rem; }
+.mod-bar .bar { grid-column: 1 / -1; }
+.mod-bar em { font-style: normal; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.wrong-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.wrong-list button { border: 1px solid var(--bad); color: var(--bad); background: var(--bad-soft); border-radius: 99px; padding: 4px 12px; font-size: 0.82rem; }
+.sheet { display: flex; flex-direction: column; gap: 16px; }
+.sheet h3 { font-size: 1rem; margin-bottom: 6px; }
+.sheet ol { margin: 0; padding-left: 2.6em; display: flex; flex-direction: column; gap: 4px; }
+.sheet li { max-width: 72ch; }
+.sheet li::marker { font-family: var(--font-mono); font-size: 0.8em; color: var(--ink-2); }
+.row-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 16px; padding-block: 16px 40px; }
+  .rail { position: static; max-height: none; overflow: visible; padding-right: 0; }
+  .rail-toggle { display: flex; justify-content: space-between; align-items: center; width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 10px 14px; font-weight: 600; }
+  .rail-body { display: none; flex-direction: column; gap: 20px; }
+  .rail.open .rail-body { display: flex; }
+  .card { padding: 20px 16px; }
+  .hint { display: none; }
+}
+@media (min-width: 901px) { .rail-body { display: flex; flex-direction: column; gap: 20px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <h1>Android Mastery</h1>
+      <span>Experienced level · Kotlin · 50 lessons</span>
+    </div>
+    <div class="progress" aria-live="polite">
+      <div class="progress-row"><span id="progText">0 / 50 answered</span><span id="scoreText">Score 0</span></div>
+      <div class="bar" aria-hidden="true"><i class="b-ok" id="barOk" style="width:0"></i><i class="b-bad" id="barBad" style="width:0"></i></div>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="resultsBtn" type="button">Results</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="rail" id="rail">
+    <button class="rail-toggle" id="railToggle" type="button" aria-expanded="false" aria-controls="railBody"><span>Course map</span><span id="railToggleMeta"></span></button>
+    <div class="rail-body" id="railBody">
+      <div>
+        <p class="label">Difficulty</p>
+        <div class="seg" role="group" aria-label="Filter by difficulty" id="seg"></div>
+      </div>
+      <div id="modeNote" class="mode-note" hidden></div>
+      <div>
+        <p class="label">Back stack</p>
+        <div class="stack" id="stack"></div>
+      </div>
+      <div>
+        <p class="label">Modules</p>
+        <div class="modules" id="modules"></div>
+      </div>
+    </div>
+  </aside>
+  <main id="main" class="card" tabindex="-1"></main>
+</div>
+
+<script>
+const ITEMS = [];
+ITEMS.push(
+{
+  id: 1, difficulty: `easy`, module: `App Fundamentals`,
+  concept: `The four app components`,
+  summary: `The Android OS only knows about a small set of building blocks it can create and start on your behalf. An Activity is a single screen the user interacts with. A Service does work without a UI. A BroadcastReceiver reacts to system-wide or app events, such as boot completed or a change in connectivity. A ContentProvider exposes structured data to other apps or processes through a URI-based API. The system instantiates these itself, which is why you never call an Activity constructor. Everything else in your app lives inside one of them.`,
+  code: `<!-- AndroidManifest.xml -->
+<application android:name=".App">
+    <activity android:name=".MainActivity" android:exported="true" />
+    <service android:name=".SyncService" android:exported="false" />
+    <receiver android:name=".BootReceiver" android:exported="false" />
+    <provider
+        android:name=".NotesProvider"
+        android:authorities="com.example.notes"
+        android:exported="false" />
+</application>`,
+  codeLang: `xml`,
+  keyPoints: [`Components are entry points the OS can launch independently.`, `Each must be declared in the manifest (receivers can also be registered at runtime).`, `The OS owns their creation and lifecycle.`],
+  question: `Which of these is NOT one of the four Android app components that the system can start directly?`,
+  options: [`ContentProvider`, `BroadcastReceiver`, `Fragment`, `Service`],
+  correctIndex: 2,
+  explanation: `A Fragment is a reusable piece of UI hosted inside an Activity (or another Fragment). The OS never starts a Fragment on its own; your Activity's FragmentManager creates and manages it. The four components are Activity, Service, BroadcastReceiver and ContentProvider.`,
+  whyWrong: [`ContentProvider is a component: the OS creates it when another app or process queries its authority.`, `BroadcastReceiver is a component: the OS can instantiate it to deliver an Intent, even if your app isn't running.`, ``, `Service is a component: it can be started or bound by the OS or by other apps.`],
+  hiddenFact: `A ContentProvider's onCreate() runs before Application.onCreate(). Libraries used this to auto-initialise themselves without any code from you, which slowed app startup as providers piled up. Jetpack App Startup exists to merge those initialisers into a single provider.`,
+  recap: `Four components: Activity, Service, BroadcastReceiver, ContentProvider. Fragments, Views and ViewModels live inside them.`
+},
+{
+  id: 2, difficulty: `easy`, module: `App Fundamentals`,
+  concept: `android:exported`,
+  summary: `The android:exported attribute decides whether apps other than yours can start a component. A component that should only be used internally should be exported="false". Starting with Android 12 (apps targeting API 31 or higher), any activity, service or receiver that declares an intent-filter must state android:exported explicitly. Older versions silently picked a default, which led to components being exposed by accident.`,
+  code: `<activity
+    android:name=".ShareReceiverActivity"
+    android:exported="true">   <!-- required: has an intent-filter -->
+    <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+    </intent-filter>
+</activity>`,
+  codeLang: `xml`,
+  keyPoints: [`exported="true" means other apps can launch it.`, `Rule since target API 31: intent-filter means exported must be explicit.`, `Default to false unless another app or the launcher really needs it.`],
+  question: `Your app targets API 34. A <service> declares an <intent-filter> but has no android:exported attribute. What happens?`,
+  options: [`It defaults to exported="true", as on older versions`, `It defaults to exported="false" without any error`, `The build or install fails until you set the value explicitly`, `Lint shows a warning but the app runs normally`],
+  correctIndex: 2,
+  explanation: `For apps targeting API 31+, the manifest merger reports an error and Android 12+ devices refuse to install an APK where a component with an intent-filter omits android:exported. Google made the value mandatory so developers consciously decide what they expose.`,
+  whyWrong: [`That was the pre-Android 12 behaviour, and it is exactly what the rule was introduced to stop.`, `There is no silent default any more for components with intent-filters.`, ``, `It is a hard error, not just a Lint warning.`],
+  hiddenFact: `Before API 31, the implicit default was true whenever a component had any intent-filter and false otherwise. Many apps exposed internal services just because someone added a filter for convenience, which led to real security bugs.`,
+  recap: `Target 31+: any component with an intent-filter must declare android:exported explicitly.`
+},
+{
+  id: 3, difficulty: `easy`, module: `App Fundamentals`,
+  concept: `Explicit vs implicit intents`,
+  summary: `An Intent is a message asking the system to do something. An explicit intent names the exact component class, which is how you navigate within your own app. An implicit intent describes an action and data, such as "view this URL", and the system finds apps whose intent-filters match. If several apps match and none is the default, the user gets a chooser.`,
+  code: `// Explicit: a specific class in my app
+startActivity(Intent(this, DetailActivity::class.java))
+
+// Implicit: describe what you want, let the system resolve it
+val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://developer.android.com"))
+try {
+    startActivity(intent)
+} catch (e: ActivityNotFoundException) {
+    showToast("No app can open this link")
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Explicit = target class known; implicit = action + data.`, `Implicit intents are resolved against other apps' intent-filters.`, `Always handle the case where no app can handle the intent.`],
+  question: `You want to open a web URL in whichever browser the user prefers. Which Intent should you use?`,
+  options: [`Intent(this, BrowserActivity::class.java) with the URL as an extra`, `Intent(Intent.ACTION_VIEW, Uri.parse(url))`, `Intent("android.intent.action.MAIN") with the URL as data`, `sendBroadcast() with an Intent containing the URL`],
+  correctIndex: 1,
+  explanation: `ACTION_VIEW with an http(s) URI is an implicit intent that every browser registers for. The system resolves it to the user's default browser or shows a chooser.`,
+  whyWrong: [`That is an explicit intent to a class in your own app; it can't reach another app's browser.`, ``, `ACTION_MAIN means "start as the main entry point" and carries no expected data; browsers don't match it with a URL.`, `Browsers don't listen for broadcasts to open pages; activities are started with startActivity().`],
+  hiddenFact: `Since Android 11, package visibility rules hide most other apps from yours. intent.resolveActivity(packageManager) can return null even when a browser is installed unless you declare a matching <queries> element. Calling startActivity() and catching ActivityNotFoundException avoids that trap.`,
+  recap: `Explicit intent = specific class; implicit intent = action + data, resolved by the system.`
+},
+{
+  id: 4, difficulty: `easy`, module: `Lifecycle & State`,
+  concept: `Activity lifecycle callbacks`,
+  summary: `An Activity moves through paired callbacks. onCreate/onDestroy bracket the instance's existence. onStart/onStop bracket the time it is visible. onResume/onPause bracket the time it is in the foreground and receiving input. When one activity launches another, the system interleaves the two activities' callbacks so the user never sees an empty screen between them.`,
+  code: `class A : AppCompatActivity() {
+    override fun onPause()  { super.onPause();  Log.d("LC", "A.onPause") }
+    override fun onStop()   { super.onStop();   Log.d("LC", "A.onStop") }
+}
+class B : AppCompatActivity() {
+    override fun onCreate(s: Bundle?) { super.onCreate(s); Log.d("LC", "B.onCreate") }
+    override fun onStart()  { super.onStart();  Log.d("LC", "B.onStart") }
+    override fun onResume() { super.onResume(); Log.d("LC", "B.onResume") }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Created ↔ Destroyed, Started (visible) ↔ Stopped, Resumed (foreground) ↔ Paused.`, `Two activities' callbacks interleave during a transition.`, `Keep onPause() short.`],
+  question: `Activity A starts full-screen Activity B. In what order do these callbacks run?`,
+  options: [`A.onPause → A.onStop → B.onCreate → B.onStart → B.onResume`, `A.onPause → B.onCreate → B.onStart → B.onResume → A.onStop`, `B.onCreate → B.onStart → B.onResume → A.onPause → A.onStop`, `A.onStop → B.onCreate → B.onStart → B.onResume → A.onPause`],
+  correctIndex: 1,
+  explanation: `A is paused first so B can take input focus. B is created, started and resumed. Only once B is visible and covers A does A receive onStop(). This avoids a moment where neither activity is on screen.`,
+  whyWrong: [`Stopping A before B is visible would leave a blank frame; the system delays A.onStop().`, ``, `A must give up the foreground (onPause) before B can become resumed.`, `onStop never comes before onPause; the paired order is always pause, then stop.`],
+  hiddenFact: `Because B can't appear until A.onPause() returns, slow work in onPause (saving to disk, releasing a camera synchronously) directly delays the next screen. If B is translucent or a dialog-themed activity, A gets onPause() but not onStop(), because it remains partly visible.`,
+  recap: `A.onPause → B.onCreate/onStart/onResume → A.onStop. Keep onPause fast.`
+},
+{
+  id: 5, difficulty: `easy`, module: `Lifecycle & State`,
+  concept: `Configuration changes`,
+  summary: `A configuration change is any change to the device setup that can affect resources, such as rotation, dark mode, language, font scale, a keyboard being attached or a window being resized. By default Android handles it by tearing the Activity down and building a new instance, so the correct resources are loaded. Data that must survive belongs in something that outlives the Activity instance.`,
+  code: `class ProfileViewModel : ViewModel() {
+    val name = MutableStateFlow("")
+}
+
+class ProfileActivity : AppCompatActivity() {
+    // Same ViewModel instance before and after rotation
+    private val vm: ProfileViewModel by viewModels()
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Rotation is only one of many configuration changes.`, `Default handling: destroy and recreate the Activity.`, `ViewModel is stored outside the Activity instance (in a ViewModelStore).`],
+  question: `The user rotates the device. The manifest has no android:configChanges. What happens by default?`,
+  options: [`The Activity instance is kept and only onConfigurationChanged() is called`, `The Activity is destroyed and recreated; its ViewModel instance survives`, `Both the Activity and its ViewModel are recreated from scratch`, `The whole app process is restarted`],
+  correctIndex: 1,
+  explanation: `The system destroys the old Activity and creates a new one with the new configuration. The ViewModelStore is retained across this recreation, so viewModels() hands the new Activity the same ViewModel. onCleared() is not called.`,
+  whyWrong: [`That only happens when you opt out with android:configChanges for that change type.`, ``, `ViewModels exist precisely to survive configuration changes.`, `The process keeps running; only the Activity instance is replaced.`],
+  hiddenFact: `In Compose, values held with plain remember {} are lost on rotation because the composition is rebuilt with the new Activity; you need rememberSaveable or a ViewModel. On foldables and in multi-window, resizing triggers the same recreation, so bugs once hidden behind "we lock to portrait" now show up.`,
+  recap: `Config change = Activity recreated; ViewModel survives; plain remember doesn't.`
+},
+{
+  id: 6, difficulty: `easy`, module: `App Fundamentals`,
+  concept: `Context and memory leaks`,
+  summary: `Context is your handle to app resources and system services. An Activity is a Context tied to one screen, with a theme and a window; it should die when the screen is destroyed. The Application context lives as long as the process. Anything that lives longer than a screen (singletons, caches, background workers) must never hold an Activity Context, or the garbage collector can't free that screen.`,
+  code: `object Analytics {
+    lateinit var ctx: Context
+    fun init(c: Context) { ctx = c }
+}
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(s: Bundle?) {
+        super.onCreate(s)
+        Analytics.init(this)   // <- what's wrong?
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Activity context: UI, themes, dialogs; short-lived.`, `Application context: long-lived work, singletons.`, `A long-lived object holding a short-lived one is a leak.`],
+  question: `What is the problem with Analytics.init(this) above?`,
+  options: [`Nothing; Context references are weak by default`, `It crashes with IllegalStateException on rotation`, `It only matters on low-RAM devices`, `The singleton keeps the destroyed Activity and its whole view hierarchy in memory`],
+  correctIndex: 3,
+  explanation: `A Kotlin object lives for the whole process. Storing the Activity in it means that after the Activity is destroyed (for example, on rotation), the old instance and every View it inflated can't be garbage collected. Pass applicationContext instead, or don't store a Context at all.`,
+  whyWrong: [`Kotlin and Java references are strong unless you explicitly use WeakReference.`, `Nothing crashes; leaks are silent, which is why they're dangerous.`, `The leak happens on every device; low RAM only makes the OutOfMemoryError arrive sooner.`, ``],
+  hiddenFact: `Using the Application context for UI has its own problems. Inflating views with it loses your Activity theme, and showing a Dialog with it throws WindowManager.BadTokenException because it has no window token. The rule is to pick the context whose lifetime matches the object using it.`,
+  recap: `Long-lived objects get applicationContext; UI gets the Activity context.`
+},
+{
+  id: 7, difficulty: `easy`, module: `App Fundamentals`,
+  concept: `The main thread and ANRs`,
+  summary: `Each app has one main (UI) thread. It processes input events, runs lifecycle callbacks, measures, lays out and draws views. If you block it, nothing else happens: no taps are handled and no frames are drawn. When the app doesn't respond to an input event for about five seconds, the system shows an "App Not Responding" (ANR) dialog. Work done off the main thread doesn't cause ANRs, however long it takes.`,
+  code: `button.setOnClickListener {
+    // Runs on the main thread
+    val result = heavyCompute()       // blocks UI if slow
+    textView.text = result
+}
+
+// Better: move work off the main thread
+button.setOnClickListener {
+    lifecycleScope.launch {
+        val result = withContext(Dispatchers.Default) { heavyCompute() }
+        textView.text = result
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Click listeners and lifecycle callbacks run on the main thread.`, `Input not handled within ~5 s → ANR.`, `Background threads can be slow without causing ANRs.`],
+  question: `Which of these is most likely to trigger an ANR dialog?`,
+  options: [`A coroutine on Dispatchers.IO that takes 20 seconds`, `A WorkManager job that runs for 5 minutes`, `Thread.sleep(6000) inside a button's onClick`, `A Retrofit suspend call launched from viewModelScope`],
+  correctIndex: 2,
+  explanation: `onClick runs on the main thread. Sleeping for 6 seconds blocks it, so the next input event isn't handled within the 5-second limit and the system reports an ANR.`,
+  whyWrong: [`Dispatchers.IO is a background pool; the main thread stays free.`, `WorkManager runs Workers on a background executor.`, ``, `Retrofit suspend functions perform the network call off the main thread and only resume on it with the result.`],
+  hiddenFact: `Google Play's Android Vitals counts a user-perceived ANR rate above 0.47% as bad behaviour, and apps over the threshold can get lower visibility on Play. A BroadcastReceiver's onReceive() also runs on the main thread, with its own timeout, so heavy work there causes ANRs as well.`,
+  recap: `Never block the main thread; ~5 s without handling input = ANR.`
+},
+{
+  id: 8, difficulty: `easy`, module: `App Fundamentals`,
+  concept: `Resource qualifiers`,
+  summary: `Android picks resources at runtime based on the current configuration. You put alternatives in folders whose names carry qualifiers: a language code, night mode, the smallest screen width and so on. The default folder (with no qualifier) is the fallback when nothing more specific matches, so it must contain every resource.`,
+  code: `res/
+  values/strings.xml          <!-- default (fallback) -->
+  values-night/colors.xml     <!-- dark theme -->
+  values-sw600dp/dimens.xml   <!-- tablets: smallest width ≥ 600dp -->
+  drawable-xxhdpi/logo.png    <!-- density-specific -->`,
+  codeLang: `text`,
+  keyPoints: [`Folder name = resource type + qualifiers.`, `The system chooses the best match at runtime.`, `The unqualified folder is the mandatory fallback.`],
+  question: `Where should Hindi translations of strings.xml go?`,
+  options: [`res/values-hi/strings.xml`, `res/hindi/strings.xml`, `res/values/strings-hi.xml`, `res/raw/hi/strings.xml`],
+  correctIndex: 0,
+  explanation: `Language qualifiers use the ISO 639-1 code appended to the resource type: values-hi. When the device or per-app locale is Hindi, strings are loaded from there.`,
+  whyWrong: [``, `Resource folders must start with a known type (values, drawable…); "hindi" isn't one and the build rejects it.`, `The qualifier belongs on the folder, not the file name; this just adds another default-language file.`, `raw/ holds files read as streams; it isn't used for string lookup and doesn't support nested folders.`],
+  hiddenFact: `If a string exists in values-hi but not in values, a user with another language crashes with Resources.NotFoundException. Missing translations are fine; a missing default is not. Android 13 added per-app language settings, which the Android Gradle Plugin can wire up for you with generateLocaleConfig.`,
+  recap: `Qualifiers go on folders (values-hi, values-night); the default folder must contain everything.`
+},
+{
+  id: 9, difficulty: `easy`, module: `Compose`,
+  concept: `Recomposition`,
+  summary: `In Jetpack Compose, a @Composable function describes UI for the current state. Compose tracks which State objects each composable reads while it runs. When one of those values changes, Compose schedules that composable to run again (recompose) and updates only the parts of the UI that changed. Ordinary variables aren't tracked at all.`,
+  code: `@Composable
+fun Counter() {
+    var count by remember { mutableStateOf(0) }
+    Button(onClick = { count++ }) {
+        Text("Clicked $count times")
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`UI = f(state).`, `Compose tracks State reads during composition.`, `Plain vars are invisible to Compose.`],
+  question: `What causes Counter to recompose?`,
+  options: [`Every frame, roughly 60 times a second`, `Changing any plain var declared in the function`, `Calling invalidate() on the hosting view`, `Writing a new value to a State object that Counter read during composition`],
+  correctIndex: 3,
+  explanation: `mutableStateOf creates a snapshot State. Counter reads count while composing, so Compose subscribes it. count++ writes a new value, which invalidates Counter and schedules a recomposition on the next frame.`,
+  whyWrong: [`Compose doesn't recompose on a timer; it only runs when tracked state changes.`, `Plain vars aren't observed, and they reset to their initial value when the function runs again.`, `invalidate() belongs to the View system; composables aren't redrawn that way.`, ``],
+  hiddenFact: `Compose may skip composables, run them in any order or abandon a recomposition halfway. That's why composables must be free of side effects: no network calls or writes to outside variables in the function body. Side effects belong in effect APIs like LaunchedEffect.`,
+  recap: `Recomposition is triggered by changes to State that was read during composition.`
+},
+{
+  id: 10, difficulty: `easy`, module: `Compose`,
+  concept: `remember vs rememberSaveable`,
+  summary: `remember stores a value in the composition so it survives recomposition. It's lost when the composable leaves the composition: on a configuration change, when navigating away, or when a lazy list item scrolls far off. rememberSaveable additionally saves the value into the saved-instance-state Bundle, so it is restored after configuration changes and after the system kills the process in the background.`,
+  code: `@Composable
+fun SearchBar() {
+    var query by rememberSaveable { mutableStateOf("") }
+    TextField(value = query, onValueChange = { query = it })
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`remember: survives recomposition only.`, `rememberSaveable: also survives configuration changes and process death.`, `Saveable values must fit in a Bundle (or use a custom Saver).`],
+  question: `A text field's value must survive rotation and the system killing the app in the background. Which should you use?`,
+  options: [`remember { mutableStateOf("") }`, `A var inside a Kotlin object`, `rememberSaveable { mutableStateOf("") }`, `derivedStateOf { "" }`],
+  correctIndex: 2,
+  explanation: `rememberSaveable writes the value into the saved instance state, which the system keeps when it kills your process and gives back when the user returns.`,
+  whyWrong: [`remember is wiped when the Activity is recreated and when the process dies.`, `A global object survives rotation but is lost when the process dies, and it's shared across every screen instance.`, ``, `derivedStateOf computes a value from other state; it doesn't store or save anything.`],
+  hiddenFact: `Because rememberSaveable goes through a Bundle, saving large lists or bitmaps can crash with TransactionTooLargeException. Save small identifiers (a query string, a selected id) and reload the data itself.`,
+  recap: `remember = recomposition only; rememberSaveable = also rotation and process death.`
+},
+{
+  id: 11, difficulty: `easy`, module: `Compose`,
+  concept: `State hoisting`,
+  summary: `State hoisting means moving state out of a composable and up to its caller. The composable instead receives the current value and an event callback. The composable becomes stateless: it only displays what it's given and reports what the user did. The caller (often a screen-level composable or ViewModel) owns the state.`,
+  code: `@Composable
+fun NameField(name: String, onNameChange: (String) -> Unit) {
+    TextField(value = name, onValueChange = onNameChange)
+}
+
+@Composable
+fun ProfileScreen(vm: ProfileViewModel) {
+    val name by vm.name.collectAsStateWithLifecycle()
+    NameField(name = name, onNameChange = vm::onNameChange)
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Pattern: value in, events out.`, `Stateless composables are easy to reuse, preview and test.`, `Hoist state to the lowest common owner that needs it.`],
+  question: `What is the main benefit of hoisting NameField's state?`,
+  options: [`One source of truth: the caller owns the state, and NameField becomes reusable and testable`, `Faster GPU rendering of the text field`, `The state automatically survives process death`, `The Compose compiler requires it for any composable with parameters`],
+  correctIndex: 0,
+  explanation: `With hoisting, the same value isn't duplicated in two places that can disagree. NameField can be reused with any state holder, previewed with fixed values and tested by checking that it calls onNameChange.`,
+  whyWrong: [``, `Hoisting is about ownership; it has no effect on GPU rendering.`, `Survival depends on where the owner stores it (SavedStateHandle, rememberSaveable), not on hoisting itself.`, `It's a design guideline; composables can hold internal state.`],
+  hiddenFact: `If you hoist a TextField's value but forget to update it in onValueChange, the field looks frozen: typing does nothing, because the field always displays the unchanged value it was given. That's the hoisting contract working as designed.`,
+  recap: `Hoisting: pass value down, send events up; the caller owns the state.`
+},
+{
+  id: 12, difficulty: `easy`, module: `Coroutines & Flow`,
+  concept: `What suspend really means`,
+  summary: `The suspend modifier means a function can pause without blocking its thread and resume later. It says nothing about which thread the function runs on. A suspend function runs on whatever dispatcher its caller is using until something inside it explicitly switches, for example with withContext. Blocking calls such as Thread.sleep or a synchronous file read still block the current thread.`,
+  code: `suspend fun load(): String {
+    Thread.sleep(3000)     // blocking call
+    return "data"
+}
+
+class MyViewModel : ViewModel() {
+    fun refresh() = viewModelScope.launch {
+        val d = load()
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`suspend = can pause, not "runs in background".`, `Code runs on the caller's dispatcher until withContext switches it.`, `Blocking calls inside suspend functions still block.`],
+  question: `Which thread does Thread.sleep(3000) run on in this code?`,
+  options: [`A background thread, because load() is a suspend function`, `The main thread, blocking the UI for 3 seconds`, `Dispatchers.IO, the default for suspend functions`, `None; suspend functions can't call Thread.sleep`],
+  correctIndex: 1,
+  explanation: `viewModelScope uses Dispatchers.Main.immediate. load() never switches dispatcher, so its body, including the sleep, runs on the main thread and freezes the UI.`,
+  whyWrong: [`The suspend modifier doesn't move work off the current thread.`, ``, `There is no default background dispatcher for suspend functions; they inherit the caller's.`, `It compiles fine; it's just a blocking call that defeats the purpose.`],
+  hiddenFact: `The convention is that a suspend function should be main-safe: callable from the main thread without blocking it. The function that does blocking work is responsible for wrapping it in withContext(Dispatchers.IO), so callers don't have to guess.`,
+  recap: `suspend doesn't choose a thread; use withContext to move blocking work.`
+},
+{
+  id: 13, difficulty: `easy`, module: `Coroutines & Flow`,
+  concept: `Dispatchers`,
+  summary: `A dispatcher decides which thread or pool a coroutine runs on. Dispatchers.Main is the Android UI thread. Dispatchers.IO is an elastic pool for blocking I/O such as disk, database or blocking network calls; threads mostly wait there. Dispatchers.Default is sized to the number of CPU cores and is meant for CPU-heavy work: sorting, parsing, diffing, image processing.`,
+  code: `suspend fun prepare(items: List<Item>): List<Item> =
+    withContext(Dispatchers.Default) {
+        items.sortedBy { it.score }       // CPU work
+    }
+
+suspend fun readFile(f: File): String =
+    withContext(Dispatchers.IO) { f.readText() }   // blocking I/O`,
+  codeLang: `kotlin`,
+  keyPoints: [`Main: UI updates only.`, `IO: waiting on blocking I/O.`, `Default: number crunching.`],
+  question: `You need to sort 500,000 items in memory. Which dispatcher fits best?`,
+  options: [`Dispatchers.Main`, `Dispatchers.IO`, `Dispatchers.Default`, `Dispatchers.Unconfined`],
+  correctIndex: 2,
+  explanation: `Sorting is pure CPU work. Default's pool matches the number of cores, so CPU-bound tasks run in parallel without oversubscribing the processor.`,
+  whyWrong: [`Sorting this much on the UI thread would freeze the app.`, `IO has many more threads than cores; that helps tasks that wait, not tasks that compute, and over-subscribes the CPU.`, ``, `Unconfined runs on whatever thread resumes it, which is unpredictable; it's meant for special cases and tests.`],
+  hiddenFact: `IO and Default share the same underlying thread pool. withContext(Dispatchers.IO) from Default often continues on the same thread without a real switch, so it's cheap. IO is limited to 64 threads by default (or the core count, if higher).`,
+  recap: `Main = UI, IO = blocking I/O, Default = CPU-heavy work.`
+},
+{
+  id: 14, difficulty: `easy`, module: `Coroutines & Flow`,
+  concept: `viewModelScope`,
+  summary: `viewModelScope is a CoroutineScope tied to a ViewModel. Coroutines launched in it run as long as the ViewModel exists, so they continue through configuration changes. The scope is cancelled automatically when the ViewModel is cleared, which happens when its owner (Activity, Fragment or navigation destination) is finished for good.`,
+  code: `class FeedViewModel(private val repo: FeedRepo) : ViewModel() {
+    val feed = MutableStateFlow<List<Post>>(emptyList())
+
+    init {
+        viewModelScope.launch {
+            feed.value = repo.load()   // cancelled automatically on onCleared()
+        }
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Scope lifetime = ViewModel lifetime.`, `Survives rotation; dies when the screen is finished.`, `No manual cancellation needed.`],
+  question: `When is a coroutine launched in viewModelScope cancelled?`,
+  options: [`When the Activity reaches onStop()`, `When the device is rotated`, `Never; you must cancel it manually`, `When the ViewModel is cleared, such as when the screen is finished permanently`],
+  correctIndex: 3,
+  explanation: `ViewModel.onCleared() cancels viewModelScope. That's triggered when the owning Activity finishes (not for config change) or a Fragment/destination is removed for good.`,
+  whyWrong: [`The ViewModel stays alive while the app is in the background, so work continues after onStop().`, `Rotation keeps the ViewModel, so its scope keeps running.`, `Cancellation is automatic; that's the point of the scope.`, ``],
+  hiddenFact: `viewModelScope is built with a SupervisorJob, so one failing child doesn't cancel its siblings. It runs on Dispatchers.Main.immediate, which executes the coroutine right away if you're already on the main thread instead of posting it to the end of the queue.`,
+  recap: `viewModelScope lives as long as the ViewModel and is cancelled in onCleared().`
+},
+{
+  id: 15, difficulty: `easy`, module: `App Fundamentals`,
+  concept: `Gradle: implementation vs api`,
+  summary: `In a multi-module project, Gradle configurations decide who can see a dependency at compile time. implementation adds a library for this module only; modules that depend on it can't use that library's classes in their own code. api exports the library as part of this module's public surface, so consumers see it too. Either way, the library is still packaged into the final APK.`,
+  code: `// :data/build.gradle.kts
+dependencies {
+    implementation(libs.retrofit)   // internal detail of :data
+    api(libs.kotlinx.coroutines)    // types appear in :data's public API
+}
+
+// :app/build.gradle.kts
+dependencies {
+    implementation(project(":data"))
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`implementation hides a dependency from consumers' compile classpath.`, `api exposes it.`, `Runtime packaging is the same either way.`],
+  question: `Module :data uses implementation(libs.retrofit). Module :app depends on :data. Can code in :app import Retrofit classes?`,
+  options: [`No; implementation dependencies aren't on consumers' compile classpath`, `Yes, always`, `Only in debug builds`, `Yes, but only if :app uses kapt`],
+  correctIndex: 0,
+  explanation: `implementation keeps Retrofit internal to :data. :app compiles only against what :data exposes, so importing Retrofit there fails unless :app declares it itself or :data uses api.`,
+  whyWrong: [``, `That's how api behaves, not implementation.`, `Build types don't change dependency visibility.`, `Annotation processing has nothing to do with dependency visibility.`],
+  hiddenFact: `implementation also speeds up builds. If :data changes its internal dependency version, Gradle doesn't need to recompile :app because its compile classpath didn't change. Overusing api in large projects causes long recompilation chains.`,
+  recap: `implementation = private to the module; api = exported to consumers.`
+}
+);
+
+ITEMS.push(
+{
+  id: 16, difficulty: `medium`, module: `Lifecycle & State`,
+  concept: `Launch modes: singleTop`,
+  summary: `Every startActivity() creates a new instance by default (launchMode "standard"), even if the same activity is already at the top of the back stack. launchMode="singleTop" changes one case: when the target activity is already the topmost one, the system reuses that instance and delivers the new Intent to it. If it's anywhere else in the stack, a new instance is still created.`,
+  code: `<activity android:name=".ChatActivity" android:launchMode="singleTop" />
+
+class ChatActivity : AppCompatActivity() {
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)                 // so getIntent() returns the latest
+        openChat(intent.getStringExtra("chatId"))
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`standard: always a new instance.`, `singleTop: reuse only if already on top.`, `Reuse is signalled through onNewIntent().`],
+  question: `ChatActivity (singleTop) is currently on top of the stack. The user taps a notification that starts ChatActivity again. What happens?`,
+  options: [`A second ChatActivity instance is created on top`, `The task is cleared and ChatActivity restarts`, `The existing instance receives onNewIntent() and no new instance is created`, `The app crashes with a duplicate-activity error`],
+  correctIndex: 2,
+  explanation: `With singleTop and the activity already on top, the system calls onNewIntent() on the existing instance instead of creating another. The user doesn't get two identical chat screens stacked up.`,
+  whyWrong: [`That's what standard launch mode would do.`, `singleTop doesn't clear anything; that would require flags like FLAG_ACTIVITY_CLEAR_TASK.`, ``, `Multiple instances of an activity are allowed; there is no such error.`],
+  hiddenFact: `getIntent() keeps returning the original Intent even after onNewIntent() runs. If other code reads intent extras later (for example in onResume), call setIntent(intent) inside onNewIntent(), or you'll process stale data.`,
+  recap: `singleTop: if already on top, reuse it via onNewIntent(); otherwise create a new one.`
+},
+{
+  id: 17, difficulty: `medium`, module: `Lifecycle & State`,
+  concept: `FLAG_ACTIVITY_CLEAR_TOP`,
+  summary: `Intent flags let a single launch change how the back stack behaves. FLAG_ACTIVITY_CLEAR_TOP says: if the target activity already exists in this task, finish every activity above it instead of adding a new one on top. What happens to the existing target instance itself depends on its launch mode and on whether FLAG_ACTIVITY_SINGLE_TOP is also set.`,
+  code: `// Back stack: Home → List → Detail → Settings (all launchMode="standard")
+val intent = Intent(this, HomeActivity::class.java)
+    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+startActivity(intent)`,
+  codeLang: `kotlin`,
+  keyPoints: [`CLEAR_TOP finishes everything above the existing target.`, `The target's own fate depends on launch mode and SINGLE_TOP.`, `Commonly used for "go home" or "log out" navigation.`],
+  question: `With the stack above, what happens when this Intent is started?`,
+  options: [`List, Detail and Settings finish, and the existing Home receives onNewIntent()`, `List, Detail and Settings finish, then Home itself is destroyed and recreated with the new Intent`, `A new Home is added on top; nothing is finished`, `Every activity including Home finishes and the app closes`],
+  correctIndex: 1,
+  explanation: `For a "standard" activity without FLAG_ACTIVITY_SINGLE_TOP, CLEAR_TOP finishes the activities above Home and then also finishes the old Home and creates a fresh instance to receive the Intent. Any state in that old Home instance is lost.`,
+  whyWrong: [`That only happens if you add FLAG_ACTIVITY_SINGLE_TOP (or Home is singleTop).`, ``, `CLEAR_TOP exists precisely to avoid stacking a duplicate.`, `Only activities above the target are cleared; the task survives.`],
+  hiddenFact: `This recreate-the-target behaviour surprises many developers because the screen flashes and Home loses its state. CLEAR_TOP | SINGLE_TOP is the usual combination when you want to return to the existing instance.`,
+  recap: `CLEAR_TOP alone recreates a standard target; add SINGLE_TOP to keep the existing instance.`
+},
+{
+  id: 18, difficulty: `medium`, module: `Lifecycle & State`,
+  concept: `Fragment view lifecycle`,
+  summary: `A Fragment has two lifecycles. The Fragment object lives for as long as it's in the FragmentManager, including while it sits on the back stack. Its View is created in onCreateView and destroyed in onDestroyView, which happens when the fragment goes to the back stack. Coming back creates a brand-new view on the same Fragment instance. Anything that touches views should be tied to the view's lifecycle, viewLifecycleOwner.`,
+  code: `class FeedFragment : Fragment(R.layout.feed) {
+    private val vm: FeedViewModel by viewModels()
+
+    override fun onViewCreated(view: View, s: Bundle?) {
+        vm.items.observe(this) { items ->      // owner = the Fragment
+            adapter.submitList(items)
+        }
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Fragment instance outlives its view on the back stack.`, `onViewCreated can run many times on one Fragment.`, `Observe UI data with viewLifecycleOwner.`],
+  question: `What is wrong with using this as the LifecycleOwner in onViewCreated?`,
+  options: [`Nothing; the Fragment is the recommended owner`, `LiveData never delivers values to Fragments`, `It crashes because Fragment isn't a LifecycleOwner`, `Each time the view is recreated from the back stack, another observer is added, causing duplicate updates and references to dead views`],
+  correctIndex: 3,
+  explanation: `The Fragment's lifecycle doesn't end when its view is destroyed. Returning from the back stack calls onViewCreated again, adding a second observer while the first still exists. Using viewLifecycleOwner removes each observer when its view is destroyed.`,
+  whyWrong: [`Lint flags this exact pattern; viewLifecycleOwner is the recommended owner here.`, `LiveData works fine with Fragments; the problem is duplication, not delivery.`, `Fragment does implement LifecycleOwner, which is why this compiles.`, ``],
+  hiddenFact: `The same split explains the common ViewBinding pattern: setting _binding = null in onDestroyView(). Otherwise the Fragment on the back stack keeps the old view tree alive in memory until the user returns.`,
+  recap: `In Fragments, observe UI data with viewLifecycleOwner, not this.`
+},
+{
+  id: 19, difficulty: `medium`, module: `Lifecycle & State`,
+  concept: `Process death and SavedStateHandle`,
+  summary: `When your app is in the background, Android may kill its process to reclaim memory. When the user returns from Recents, the system recreates the process and the last Activity, and passes back the saved instance state it kept. Anything that existed only in memory is gone, including ViewModels and singletons. SavedStateHandle is a key-value map inside a ViewModel that's written into this saved state automatically.`,
+  code: `class SearchViewModel(private val state: SavedStateHandle) : ViewModel() {
+    val query: StateFlow<String> = state.getStateFlow("query", "")
+
+    fun onQueryChange(q: String) {
+        state["query"] = q          // persisted across process death
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Process death wipes memory but keeps the saved-state Bundle.`, `ViewModels don't survive process death; SavedStateHandle values do.`, `Store small UI state only (ids, queries, selections).`],
+  question: `A user types a search query, switches to another app, and the system kills your process. When they come back, which value is restored?`,
+  options: [`A value stored in the ViewModel's SavedStateHandle`, `A plain property in the ViewModel`, `A var in a companion object`, `A value held in remember {}`],
+  correctIndex: 0,
+  explanation: `SavedStateHandle writes its contents to the saved instance state, which the system keeps outside your process. On recreation the new ViewModel receives a SavedStateHandle with those values.`,
+  whyWrong: [``, `The ViewModel is a regular object in memory; it dies with the process and is created fresh.`, `Static and companion values are re-initialised when the process restarts.`, `remember isn't saved at all; rememberSaveable would be.`],
+  hiddenFact: `Developer Option "Don't keep activities" destroys activities but keeps the process alive, so ViewModels and singletons survive and the test misses real process-death bugs. To test properly, background the app and run adb shell am kill <package>, then reopen it from Recents.`,
+  recap: `Process death kills ViewModels; SavedStateHandle survives it.`
+},
+{
+  id: 20, difficulty: `medium`, module: `Coroutines & Flow`,
+  concept: `Lifecycle-aware collection`,
+  summary: `Flows collected in lifecycleScope.launch keep collecting until the Activity or Fragment is destroyed, including while the app is in the background. That wastes resources and can update UI that isn't visible. repeatOnLifecycle(state) starts a new collection each time the lifecycle reaches the given state and cancels it when the lifecycle falls below that state.`,
+  code: `override fun onCreate(s: Bundle?) {
+    super.onCreate(s)
+    lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            vm.uiState.collect { render(it) }
+        }
+    }
+}
+
+// Compose equivalent
+val state by vm.uiState.collectAsStateWithLifecycle()`,
+  codeLang: `kotlin`,
+  keyPoints: [`Collect UI flows only while visible.`, `repeatOnLifecycle cancels and restarts the block.`, `collectAsStateWithLifecycle is the Compose equivalent.`],
+  question: `Why use repeatOnLifecycle(Lifecycle.State.STARTED) instead of calling flow.collect directly inside lifecycleScope.launch?`,
+  options: [`It runs the collection on a background thread`, `It turns a cold flow into a hot one`, `It cancels collection when the UI drops below STARTED and restarts it when the UI is visible again, so upstream work can stop`, `The Flow API requires it to compile`],
+  correctIndex: 2,
+  explanation: `When the app goes to the background, the collector is cancelled. With stateIn(WhileSubscribed) upstream, the producer (location updates, database queries) also stops. When the UI returns, collection restarts and gets the latest value.`,
+  whyWrong: [`lifecycleScope uses the main dispatcher; repeatOnLifecycle doesn't change threads.`, `Hot vs cold depends on the flow itself, not on how it's collected.`, ``, `It's a lifecycle helper, not a compile requirement.`],
+  hiddenFact: `The older launchWhenStarted APIs are deprecated because they only paused the collector instead of cancelling it. The upstream producer kept running in the background, holding sensors or connections open.`,
+  recap: `Collect UI flows with repeatOnLifecycle(STARTED) or collectAsStateWithLifecycle.`
+},
+{
+  id: 21, difficulty: `medium`, module: `Coroutines & Flow`,
+  concept: `StateFlow equality and conflation`,
+  summary: `StateFlow always holds exactly one current value and gives it to new collectors immediately. It's conflated: a slow collector sees only the latest value, not every intermediate one. It also compares each new value with the current one using equals() and doesn't emit if they're equal. That makes it ideal for UI state, but a poor fit for one-off events.`,
+  code: `data class UiState(val loading: Boolean)
+
+val state = MutableStateFlow(UiState(loading = true))
+
+state.value = UiState(loading = false)   // collectors receive it
+state.value = UiState(loading = false)   // ???`,
+  codeLang: `kotlin`,
+  keyPoints: [`Always has a value; new collectors get it at once.`, `Conflated: intermediate values can be skipped.`, `Equal values (by equals()) aren't re-emitted.`],
+  question: `The collector has already received UiState(loading = false). What does it see after the second assignment?`,
+  options: [`Nothing; StateFlow ignores a new value equal to the current one`, `A second emission of the same value`, `An IllegalStateException`, `A null followed by the value`],
+  correctIndex: 0,
+  explanation: `Data classes generate equals() from their properties. The new UiState equals the current one, so StateFlow treats it as no change and doesn't emit.`,
+  whyWrong: [``, `That's SharedFlow behaviour; StateFlow deduplicates.`, `Setting an equal value is legal and simply a no-op.`, `MutableStateFlow never emits null unless its type allows null and you set it.`],
+  hiddenFact: `If you mutate a MutableList inside the state and assign the same instance back, StateFlow also won't emit, since it's equal to itself. Always emit new immutable copies. For one-time events like "show a snackbar", deduplication and conflation can drop them; model them as state that the UI consumes, or use a Channel.`,
+  recap: `StateFlow emits only distinct values and keeps just the latest.`
+},
+{
+  id: 22, difficulty: `medium`, module: `Coroutines & Flow`,
+  concept: `Cold flows`,
+  summary: `A Flow built with flow { } is cold: the builder block doesn't run when the flow is created. It runs from the start each time someone calls collect, and each collector gets its own independent run. Hot flows like StateFlow and SharedFlow produce values regardless of collectors and share them.`,
+  code: `val numbers = flow {
+    println("Start")
+    emit(1)
+    emit(2)
+}
+
+runBlocking {
+    numbers.collect { }
+    numbers.collect { }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Creating a cold flow does nothing on its own.`, `Each collect runs the producer again.`, `Use shareIn/stateIn to share one producer.`],
+  question: `How many times is "Start" printed?`,
+  options: [`0, because the flow is never started`, `1, because flows cache their producer`, `2, because the block runs once per collector`, `4, once per emitted value per collector`],
+  correctIndex: 2,
+  explanation: `Each collect call executes the flow { } block from the top. Two collections mean two executions, so "Start" prints twice.`,
+  whyWrong: [`collect is what starts a cold flow, and it's called twice.`, `Cold flows don't cache; that's what shareIn or stateIn add.`, ``, `println("Start") runs once per execution of the block, not once per emit.`],
+  hiddenFact: `If a repository returns a cold flow that makes a network call, and two parts of the UI collect it, you make two network calls. Converting it with stateIn(viewModelScope, ...) in the ViewModel shares one upstream among all collectors.`,
+  recap: `Cold flows restart for every collector; share them with stateIn or shareIn.`
+},
+{
+  id: 23, difficulty: `medium`, module: `Coroutines & Flow`,
+  concept: `stateIn and WhileSubscribed`,
+  summary: `stateIn converts a cold flow into a StateFlow owned by a scope. Its SharingStarted policy decides when the upstream runs. Eagerly starts at once and never stops. Lazily starts with the first collector and never stops. WhileSubscribed(stopTimeoutMillis) runs while at least one collector exists and stops the upstream once the last one has been gone for the given timeout.`,
+  code: `val uiState: StateFlow<FeedUiState> = repo.observeFeed()
+    .map { FeedUiState.Success(it) }
+    .stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = FeedUiState.Loading
+    )`,
+  codeLang: `kotlin`,
+  keyPoints: [`stateIn needs a scope, a start policy and an initial value.`, `WhileSubscribed stops upstream when nobody is listening.`, `The timeout adds a grace period before stopping.`],
+  question: `Why is WhileSubscribed(5_000) such a common choice in ViewModels?`,
+  options: [`Android cancels flows after 5 seconds of inactivity`, `It keeps the upstream running through a configuration change, when the collector disappears briefly, but stops it if the user really leaves`, `It delays the first emission by 5 seconds`, `It matches the ANR timeout`],
+  correctIndex: 1,
+  explanation: `During rotation, the old UI stops collecting and the new one starts within a fraction of a second. A 5-second timeout bridges that gap, so the database or network subscription isn't restarted. If the app stays in the background longer, the upstream stops and saves resources.`,
+  whyWrong: [`Android has no such rule; flow lifetime is controlled by scopes and sharing policies.`, ``, `The timeout only applies after the last collector leaves; it doesn't affect the first emission.`, `The match is coincidental; the value is about bridging config changes.`],
+  hiddenFact: `By default WhileSubscribed keeps the last value cached even after upstream stops (replayExpirationMillis is effectively infinite). Returning users see the old data instantly while the refreshed value loads.`,
+  recap: `WhileSubscribed(5000) survives rotations but stops work when the user leaves.`
+},
+{
+  id: 24, difficulty: `medium`, module: `Coroutines & Flow`,
+  concept: `Structured concurrency`,
+  summary: `Coroutines form a tree: each coroutine launched in a scope is a child of that scope's Job. A parent doesn't complete until all its children finish. With a regular Job, a failure in any child cancels the parent and, through it, all other children. coroutineScope { } creates such a scope inside a suspend function and rethrows the failure to the caller.`,
+  code: `suspend fun loadAll() = coroutineScope {
+    launch {
+        delay(100)
+        throw IOException("profile failed")
+    }
+    launch {
+        delay(1000)
+        println("B done")
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Parents wait for their children.`, `With a regular Job, one failure cancels its siblings.`, `supervisorScope or SupervisorJob makes children independent.`],
+  question: `Does "B done" get printed?`,
+  options: [`Yes; sibling coroutines are independent`, `Yes, and the exception is silently swallowed`, `Only if the code runs on Dispatchers.IO`, `No; the failure cancels the scope and the other child, and the exception is rethrown from loadAll()`],
+  correctIndex: 3,
+  explanation: `At 100 ms the first child throws. coroutineScope's Job is cancelled, which cancels the second child during its delay(1000). loadAll() then throws the IOException to its caller.`,
+  whyWrong: [`That's only true inside supervisorScope or under a SupervisorJob.`, `Structured concurrency never silently drops failures; they propagate.`, `Dispatchers don't change the failure rules.`, ``],
+  hiddenFact: `Switching to supervisorScope keeps "B done", but then the failed child's exception goes to the uncaught exception handler, which crashes an Android app. Supervision only changes who gets cancelled; you still need to catch exceptions.`,
+  recap: `One child's failure cancels its siblings unless you use a supervisor.`
+},
+{
+  id: 25, difficulty: `medium`, module: `Coroutines & Flow`,
+  concept: `CoroutineExceptionHandler`,
+  summary: `An uncaught exception in a launch coroutine travels up the job hierarchy to the root. Only there is a CoroutineExceptionHandler consulted, as a last resort for logging; by then the coroutine has already failed. A handler installed in the context of a child coroutine is ignored, because the child delegates its exception to its parent.`,
+  code: `val handler = CoroutineExceptionHandler { _, e -> Log.e("VM", "Failed", e) }
+
+fun refresh() {
+    viewModelScope.launch {
+        launch(handler) {
+            throw RuntimeException("boom")
+        }
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Exceptions propagate up to the root coroutine.`, `Handlers only work on the root coroutine or the scope.`, `For normal error handling, use try/catch.`],
+  question: `Is the handler invoked in this code?`,
+  options: [`Yes, it logs the exception and the app continues`, `Yes, but the app still crashes afterwards`, `No; handlers on child coroutines are ignored, so the exception propagates up and crashes the app`, `No, because RuntimeException isn't supported by coroutines`],
+  correctIndex: 2,
+  explanation: `The inner launch is a child of the outer one, so its exception goes to the outer launch, which is the root. That root has no handler and viewModelScope has none either, so the exception reaches the thread's uncaught exception handler and the app crashes.`,
+  whyWrong: [`It would only work if the handler were on the outer launch (or the scope).`, `The handler isn't called at all in this structure.`, ``, `Any Throwable can be thrown from a coroutine.`],
+  hiddenFact: `async doesn't report exceptions to a handler; it stores them and rethrows when you call await(). An async whose result you never await can therefore look silent, but in a regular scope it still cancels its parent.`,
+  recap: `CoroutineExceptionHandler works only at the root; prefer try/catch inside the coroutine.`
+},
+{
+  id: 26, difficulty: `medium`, module: `Compose`,
+  concept: `LaunchedEffect keys`,
+  summary: `LaunchedEffect runs a suspend block in a coroutine scoped to the composable's place in the composition. It starts when the composable enters the composition and is cancelled when it leaves. Its key parameters control restarts: if any key changes between recompositions, the running coroutine is cancelled and a new one starts with the new values.`,
+  code: `@Composable
+fun UserScreen(userId: String, vm: UserViewModel) {
+    LaunchedEffect(userId) {
+        vm.load(userId)
+    }
+    // ...
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Starts on entering composition; cancelled on leaving.`, `Restarts when a key changes.`, `Recomposition with the same keys doesn't restart it.`],
+  question: `When does the LaunchedEffect block run again?`,
+  options: [`When userId changes: the old coroutine is cancelled and a new one starts`, `On every recomposition of UserScreen`, `Never after the first run, for the life of the app`, `Only when the user taps something on screen`],
+  correctIndex: 0,
+  explanation: `The key is userId. Recomposing with the same userId leaves the running effect alone. A different userId cancels the current load and starts loading the new user.`,
+  whyWrong: [``, `That's exactly what keys prevent; effects survive recompositions with unchanged keys.`, `It runs again whenever its key changes or the composable re-enters composition.`, `Effects are driven by composition and keys, not by user input.`],
+  hiddenFact: `LaunchedEffect(Unit) is often described as "run once", but it runs again whenever the composable re-enters composition, such as after a rotation or navigating back. If a lambda passed in can change without needing a restart, wrap it in rememberUpdatedState so the effect always calls the latest version.`,
+  recap: `LaunchedEffect restarts only when its keys change or it re-enters composition.`
+},
+{
+  id: 27, difficulty: `medium`, module: `Compose`,
+  concept: `Stability and strong skipping`,
+  summary: `During recomposition, Compose can skip a child composable if its parameters haven't changed. Stable types (primitives, String, @Immutable classes) are compared with equals(). Types the compiler can't prove are stable, including the List interface, are unstable. With strong skipping mode, which is on by default since Kotlin 2.0.20, composables with unstable parameters can still be skipped, but those parameters are compared by instance identity (===).`,
+  code: `@Composable
+fun Names(names: List<String>) {
+    Column { names.forEach { Text(it) } }
+}
+
+// Parent recomposes and does this each time:
+Names(names = listOf("Asha", "Ravi"))   // a new List instance`,
+  codeLang: `kotlin`,
+  keyPoints: [`Stable parameters → equals() comparison.`, `Unstable parameters under strong skipping → === comparison.`, `List is unstable because it might be a MutableList.`],
+  question: `With strong skipping on, the parent recomposes and passes a new List instance with the same contents. Does Names skip?`,
+  options: [`Yes, because List contents are compared with equals()`, `No, because unstable parameters are compared by instance and this is a new instance`, `Yes, because Compose never recomposes children of a recomposing parent`, `No, because composables with List parameters can never be skipped`],
+  correctIndex: 1,
+  explanation: `List is unstable, so strong skipping uses === for it. listOf(...) creates a new instance on every call, so the identity check fails and Names recomposes even though the text is the same.`,
+  whyWrong: [`equals() is used only for stable parameters.`, ``, `Children are recomposed whenever their parameters fail the comparison.`, `That was true before strong skipping; now they can skip when the same instance is passed.`],
+  hiddenFact: `Fixes include remembering the list in the parent, using ImmutableList from kotlinx.collections.immutable, or a stability configuration file. Strong skipping also automatically remembers lambdas created in composables, which removed a whole class of unnecessary recompositions.`,
+  recap: `Strong skipping: unstable params skip only when the same instance is passed.`
+},
+{
+  id: 28, difficulty: `medium`, module: `Compose`,
+  concept: `derivedStateOf`,
+  summary: `Some state changes very often, but what you show depends on it only coarsely. Scroll position changes every frame, while "show the back-to-top button" only flips once. derivedStateOf creates a State whose value is computed from other states. Readers are notified only when the computed result changes, not every time the inputs change.`,
+  code: `val listState = rememberLazyListState()
+
+val showButton by remember {
+    derivedStateOf { listState.firstVisibleItemIndex > 0 }
+}
+
+if (showButton) ScrollToTopButton()`,
+  codeLang: `kotlin`,
+  keyPoints: [`Use it when inputs change more often than the result.`, `Wrap it in remember.`, `It reduces recompositions; it doesn't move work to another thread.`],
+  question: `Why is derivedStateOf used here?`,
+  options: [`The index changes constantly; derivedStateOf notifies readers only when the Boolean result changes, cutting recompositions`, `To compute the value on a background thread`, `Because LazyListState can only be read inside derivedStateOf`, `To save the value across process death`],
+  correctIndex: 0,
+  explanation: `Reading firstVisibleItemIndex directly would recompose the reader on every index change during a scroll. With derivedStateOf, the reader is invalidated only when the condition switches between true and false.`,
+  whyWrong: [``, `The calculation still runs on the main thread during snapshot reads.`, `LazyListState can be read anywhere; the reason here is efficiency.`, `Nothing about derivedStateOf is saved; that's rememberSaveable's job.`],
+  hiddenFact: `derivedStateOf { a + b } where the result changes whenever a or b changes gains nothing and adds overhead. Also, if the calculation uses a regular (non-State) parameter, include it as a key in remember(param), or the derived state keeps using the stale value.`,
+  recap: `derivedStateOf: recompose when the result changes, not when each input changes.`
+},
+{
+  id: 29, difficulty: `medium`, module: `Compose`,
+  concept: `Keys in lazy lists`,
+  summary: `LazyColumn and LazyRow identify items by position unless you supply a key. Any state an item holds through remember is associated with that identity. When items are inserted, removed or reordered, position-based identity means state stays at its index while the data moves. Stable keys let Compose move state and animations along with the data.`,
+  code: `LazyColumn {
+    items(tasks, key = { it.id }) { task ->
+        var expanded by remember { mutableStateOf(false) }
+        TaskRow(task, expanded, onToggle = { expanded = !expanded })
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Default identity = position.`, `key = { it.id } ties state to the data item.`, `Keys also enable item animations like animateItem().`],
+  question: `Items can be removed, and each row keeps its expanded state with remember. Without keys, what goes wrong when the first item is removed?`,
+  options: [`Nothing; Compose diffs the data automatically`, `The app crashes with IndexOutOfBoundsException`, `Every item is drawn twice`, `State stays with positions, so the item that moves into position 0 inherits the removed item's expanded state`],
+  correctIndex: 3,
+  explanation: `Without keys, the remembered state belongs to slot 0, slot 1, and so on. After removing item 0, item 1 is shown in slot 0 and picks up that slot's expanded flag.`,
+  whyWrong: [`Compose doesn't diff your list contents unless you give it keys to identify items.`, `Removing items is safe; the list simply re-reads its size.`, `Rendering isn't duplicated; the bug is about state, not drawing.`, ``],
+  hiddenFact: `Keys must be unique; a duplicate key throws IllegalArgumentException at runtime. They must also be types that can be stored in a Bundle (String, Int, Long, and so on) for rememberSaveable inside items to work. Providing contentType as well lets Compose reuse compositions between items of the same kind.`,
+  recap: `Give lazy items stable, unique keys so state follows data, not position.`
+},
+{
+  id: 30, difficulty: `medium`, module: `Architecture & DI`,
+  concept: `Unidirectional data flow`,
+  summary: `In unidirectional data flow (UDF), state flows down from a state holder to the UI and events flow up from the UI to the state holder. The ViewModel exposes read-only state, often as one UiState object, and public functions for user actions. Only the ViewModel can change state, so every change goes through one predictable path.`,
+  code: `class CartViewModel : ViewModel() {
+    private val _ui = MutableStateFlow(CartUiState())
+    val ui: StateFlow<CartUiState> = _ui.asStateFlow()
+
+    fun onQuantityChange(id: String, qty: Int) {
+        _ui.update { it.copy(items = it.items.withQty(id, qty)) }
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`State down, events up.`, `Expose StateFlow, keep MutableStateFlow private.`, `One state holder owns each piece of state.`],
+  question: `Which ViewModel design best follows unidirectional data flow?`,
+  options: [`Exposes a read-only StateFlow<UiState> plus functions such as onQuantityChange()`, `Exposes a public MutableStateFlow that the UI writes to directly`, `The Activity calls the repository directly and updates views`, `The ViewModel holds a reference to a TextView and sets its text`],
+  correctIndex: 0,
+  explanation: `The UI can only read state and send events by calling functions. All state transitions happen inside the ViewModel, which makes them testable and traceable.`,
+  whyWrong: [``, `If the UI can write state directly, changes come from many places and the flow is no longer one-directional.`, `That skips the state holder and puts business logic in the UI layer.`, `ViewModels must not reference Views; they outlive them and would leak the Activity.`],
+  hiddenFact: `_ui.update { } performs an atomic compare-and-set loop. Writing _ui.value = _ui.value.copy(...) from two coroutines at once can lose one of the updates, because both read the old value before either writes.`,
+  recap: `UDF: read-only state out, event functions in; update state with update { }.`
+},
+{
+  id: 31, difficulty: `medium`, module: `Architecture & DI`,
+  concept: `Hilt scopes`,
+  summary: `In Hilt, an unscoped binding gives a new instance on every injection. Scoping a binding to a component gives one shared instance for that component's lifetime. @Singleton lives as long as the app. @ActivityRetainedScoped survives configuration changes for one Activity. @ViewModelScoped gives one instance per ViewModel. @ActivityScoped and @FragmentScoped are tied to one Activity or Fragment instance and are recreated on rotation.`,
+  code: `@ViewModelScoped
+class CheckoutSession @Inject constructor()
+
+class ValidatePayment @Inject constructor(val session: CheckoutSession)
+class ApplyCoupon @Inject constructor(val session: CheckoutSession)
+
+@HiltViewModel
+class CheckoutViewModel @Inject constructor(
+    val validate: ValidatePayment,
+    val coupon: ApplyCoupon
+) : ViewModel()`,
+  codeLang: `kotlin`,
+  keyPoints: [`Unscoped = new instance per injection.`, `A scope = one instance per component lifetime.`, `Pick the shortest lifetime that works.`],
+  question: `Two use cases injected into the same ViewModel must share one CheckoutSession. It must survive rotation, but each new checkout screen needs a fresh one. Which scope fits?`,
+  options: [`@Singleton`, `@ViewModelScoped`, `@ActivityScoped`, `@FragmentScoped`],
+  correctIndex: 1,
+  explanation: `@ViewModelScoped creates one instance per ViewModel, shared by everything injected into it. It survives configuration changes along with the ViewModel and is discarded when that ViewModel is cleared.`,
+  whyWrong: [`One instance for the whole app would leak a session from one checkout into the next.`, ``, `Activity-scoped objects are recreated on rotation, losing the session.`, `Fragment-scoped objects are also recreated on rotation and can't be injected into ViewModels.`],
+  hiddenFact: `Making everything @Singleton is a common mistake. Those objects stay in memory for the whole process and can carry state between unrelated screens. Unscoped bindings are often the right default, and they're also cheaper since Hilt doesn't need to synchronise access.`,
+  recap: `Choose the shortest scope that fits; @ViewModelScoped shares within one ViewModel.`
+},
+{
+  id: 32, difficulty: `medium`, module: `Data & Background Work`,
+  concept: `Observable queries in Room`,
+  summary: `Room DAO methods can return Flow. Room then runs the query when the flow is collected and re-runs it whenever a table it reads is modified through Room. A suspend DAO function is for one-shot reads and writes. By default Room refuses to run queries on the main thread.`,
+  code: `@Dao
+interface NoteDao {
+    @Query("SELECT * FROM note ORDER BY updatedAt DESC")
+    fun observeAll(): Flow<List<Note>>
+
+    @Insert
+    suspend fun insert(note: Note)
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Flow return type = observable query.`, `Re-queried when an observed table changes.`, `suspend = one-shot, main-safe.`],
+  question: `A screen is collecting observeAll(). Another part of the app inserts a note through the DAO. What happens?`,
+  options: [`The Flow automatically re-runs the query and emits the full updated list`, `Nothing until observeAll() is called again`, `Only the new row is emitted`, `It crashes because Flow queries must be suspend functions`],
+  correctIndex: 0,
+  explanation: `Room's InvalidationTracker sees that the note table changed and re-runs every active query that reads it. Collectors receive the complete new result list.`,
+  whyWrong: [``, `The flow stays subscribed to table changes; you don't need to call it again.`, `Room re-runs the whole query; it doesn't compute row-level diffs.`, `Flow-returning DAO methods are not suspend; collection is already asynchronous.`],
+  hiddenFact: `Invalidation works at the table level. Updating any row in note re-runs the query, even if the query's rows didn't change. Add distinctUntilChanged() to avoid pushing identical lists to the UI.`,
+  recap: `Room Flow queries re-emit the full result whenever a read table changes.`
+},
+{
+  id: 33, difficulty: `medium`, module: `Data & Background Work`,
+  concept: `WorkManager`,
+  summary: `WorkManager is for deferrable work that must be guaranteed to run even if the user leaves the app or the device restarts. Work is persisted and runs when its constraints are met: network type, charging, battery not low, storage not low. It chooses the right system scheduler internally. Work tied to a visible screen belongs in coroutines; urgent long-running user-visible work may need a foreground service.`,
+  code: `val request = OneTimeWorkRequestBuilder<UploadLogsWorker>()
+    .setConstraints(
+        Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+    )
+    .build()
+
+WorkManager.getInstance(context)
+    .enqueueUniqueWork("upload_logs", ExistingWorkPolicy.KEEP, request)`,
+  codeLang: `kotlin`,
+  keyPoints: [`Guaranteed, persisted, constraint-aware.`, `Survives app exit and reboot.`, `Not for exact-time or immediate in-screen work.`],
+  question: `You need to upload logs once, only on an unmetered network. It isn't urgent but must happen even after a reboot. What should you use?`,
+  options: [`A coroutine in viewModelScope`, `A foreground service started now`, `An exact alarm with AlarmManager`, `A OneTimeWorkRequest with an UNMETERED network constraint`],
+  correctIndex: 3,
+  explanation: `WorkManager stores the request, waits until the unmetered-network constraint is met, and reschedules itself after reboot. This matches non-urgent but guaranteed work.`,
+  whyWrong: [`viewModelScope dies with the screen and doesn't survive process death or reboot.`, `A foreground service shows a persistent notification and runs immediately; it's overkill and waiting for Wi-Fi would waste it.`, `Exact alarms are for time-critical events and need special permission; they don't handle network constraints.`, ``],
+  hiddenFact: `WorkManager stores work in its own Room database. The minimum interval for PeriodicWorkRequest is 15 minutes. For short work that should start quickly, setExpedited() exists, subject to a system quota.`,
+  recap: `Guaranteed, constraint-based background work → WorkManager.`
+},
+{
+  id: 34, difficulty: `medium`, module: `Architecture & DI`,
+  concept: `Offline-first single source of truth`,
+  summary: `In an offline-first repository, the local database is the single source of truth. The UI always observes the database. Network calls never return data directly to the UI; they fetch fresh data and write it into the database, and the database flow then emits the update. This gives instant cached content, consistent state across screens, and works without connectivity.`,
+  code: `class ArticleRepository(
+    private val dao: ArticleDao,
+    private val api: ArticleApi
+) {
+    fun observeArticles(): Flow<List<Article>> = dao.observeAll()
+
+    suspend fun refresh() {
+        val fresh = api.fetchArticles()
+        dao.upsertAll(fresh)        // UI updates through the Flow
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Reads come from the database.`, `The network only writes into the database.`, `Every screen sees the same data.`],
+  question: `In this offline-first repository, where should the UI read article data from?`,
+  options: [`From the network response, then fall back to the cache on error`, `From the local database, which network refreshes write into`, `From both, merged together in the ViewModel`, `From SharedPreferences`],
+  correctIndex: 1,
+  explanation: `Making the database the only read path avoids two copies of the truth. A refresh simply writes new rows and every observer of that table updates automatically.`,
+  whyWrong: [`Returning network data directly creates two sources the UI must reconcile, and screens can show different versions.`, ``, `Merging in the ViewModel duplicates logic and still allows inconsistencies.`, `SharedPreferences is for small key-value settings, not lists of domain data.`],
+  hiddenFact: `Writes in offline-first apps are trickier than reads. Local edits are typically saved to the database immediately and marked as pending, then synced by WorkManager when the network is back, with a conflict strategy such as last-write-wins.`,
+  recap: `Offline-first: UI observes the database; the network only feeds it.`
+},
+{
+  id: 35, difficulty: `medium`, module: `Architecture & DI`,
+  concept: `Type-safe navigation arguments`,
+  summary: `Since Navigation 2.8, Compose destinations can be Kotlin @Serializable classes and objects, so routes and their arguments are checked at compile time. Arguments travel through the back stack's saved state, which has strict size limits and must survive process death. The guideline is to pass the minimum needed to identify data and let the destination load the rest.`,
+  code: `@Serializable data class ProductDetail(val productId: String)
+
+navController.navigate(ProductDetail(productId = "p-42"))
+
+@HiltViewModel
+class ProductDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    repo: ProductRepository
+) : ViewModel() {
+    private val args = savedStateHandle.toRoute<ProductDetail>()
+    val product = repo.observe(args.productId)
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Routes can be @Serializable classes.`, `Arguments live in saved state.`, `Pass identifiers, not whole objects.`],
+  question: `What's the recommended way to give the detail screen a full Product object?`,
+  options: [`Serialize the whole Product into the route`, `Put it in a global static variable before navigating`, `Put it in a Bundle as a Parcelable`, `Pass only the product id and load the product in the destination's ViewModel`],
+  correctIndex: 3,
+  explanation: `The id is small, survives process death in saved state, and the destination loads the current data from the single source of truth. That avoids stale copies and size limits.`,
+  whyWrong: [`Large route payloads bloat saved state, can hit Binder limits, and show stale data if the product changes.`, `Static variables are lost on process death, so the screen would crash or show nothing when restored.`, `A Parcelable still goes through saved state, with the same size and staleness problems.`, ``],
+  hiddenFact: `Navigation arguments are copied into the destination ViewModel's SavedStateHandle automatically. That's why savedStateHandle.toRoute<T>() works without you writing any argument parsing.`,
+  recap: `Navigate with ids; load the data in the destination.`
+}
+);
+
+ITEMS.push(
+{
+  id: 36, difficulty: `hard`, module: `Performance & Internals`,
+  concept: `Looper, Handler and the message queue`,
+  summary: `The main thread runs a Looper: an endless loop that takes the next message from a MessageQueue and handles it. Input events, lifecycle callbacks and frame callbacks are all delivered this way. A Handler is how you add a Runnable or Message to a specific Looper's queue. Code already running finishes completely before the loop moves to the next message.`,
+  code: `// Running on the main thread
+Log.d("T", "1")
+Handler(Looper.getMainLooper()).post {
+    Log.d("T", "2")
+}
+Log.d("T", "3")`,
+  codeLang: `kotlin`,
+  keyPoints: [`The main thread processes one message at a time.`, `post() enqueues; it never runs the code inline.`, `A long message delays everything behind it, including frames.`],
+  question: `In which order are the logs printed?`,
+  options: [`1, 2, 3`, `1, 3, 2`, `2, 1, 3`, `3, 1, 2`],
+  correctIndex: 1,
+  explanation: `post() adds the Runnable to the end of the main queue. The current message keeps running and logs 3. Only after it returns does the Looper reach the posted Runnable and log 2.`,
+  whyWrong: [`That would require post() to run synchronously, which it never does.`, ``, `The posted code can't run before the code that posted it.`, `Statements in the current block run top to bottom; 1 is logged before 3.`],
+  hiddenFact: `view.post { } waits until the view is attached and has gone through a layout pass, which is why it's a common way to read a view's measured width. A single message that takes longer than one frame (16.7 ms at 60 Hz) delays the next Choreographer frame callback and causes visible jank.`,
+  recap: `post() queues work for after the current message; the main thread is one message at a time.`
+},
+{
+  id: 37, difficulty: `hard`, module: `Performance & Internals`,
+  concept: `Leaks through captured lambdas`,
+  summary: `The garbage collector frees an object only when nothing reachable from a GC root refers to it. Static fields and Kotlin objects are effectively roots for the life of the process. A lambda or anonymous class that uses an Activity's members captures a reference to that Activity. Registering such a callback in a long-lived object and never removing it keeps the Activity reachable after it's destroyed.`,
+  code: `object LocationHub {
+    val listeners = mutableListOf<(Location) -> Unit>()
+}
+
+class MapActivity : AppCompatActivity() {
+    override fun onCreate(s: Bundle?) {
+        super.onCreate(s)
+        LocationHub.listeners += { loc ->
+            binding.coords.text = loc.toString()
+        }
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Lambdas capture what they use, including this.`, `Singletons keep everything they reference alive.`, `Unregister callbacks symmetrically (onStart/onStop).`],
+  question: `After rotating twice, LeakCanary reports two leaked MapActivity instances. Why?`,
+  options: [`The lambda captures the Activity through binding, and the singleton list keeps it reachable after onDestroy`, `Kotlin lambdas never capture anything, so it's a false positive`, `ViewBinding holds weak references, so the leak must come from elsewhere`, `Kotlin objects are only GC roots in debug builds`],
+  correctIndex: 0,
+  explanation: `Using binding inside the lambda means it captures the MapActivity instance. Each recreation adds a new lambda and never removes the old one. LocationHub.listeners keeps every old Activity and its view tree alive.`,
+  whyWrong: [``, `Lambdas capture any outer variables and members they use.`, `ViewBinding holds strong references to its views.`, `Static references keep objects alive in release builds too.`],
+  hiddenFact: `LeakCanary works by holding a weak reference to every destroyed Activity, Fragment and ViewModel. If one is still reachable about 5 seconds later (and after a garbage collection), it dumps the heap and shows the reference chain from the GC root to the leaked object.`,
+  recap: `Callbacks registered in long-lived objects must be removed, or they leak what they capture.`
+},
+{
+  id: 38, difficulty: `hard`, module: `Lifecycle & State`,
+  concept: `Testing process death`,
+  summary: `Process death only restores your app correctly if the system still has the saved instance state for the task. That depends on how the process ended. When the system kills a background process for memory, the task and its saved state are kept, and returning from Recents restores the screen. When the user explicitly stops the app, the task and its saved state are discarded and the app starts fresh.`,
+  code: `# 1. Open the screen under test and enter some state
+# 2. Press Home so the app is in the background
+adb shell am kill com.example.app
+# 3. Reopen the app from Recents
+
+# Android Studio alternative:
+# Logcat → "Terminate Application" while the app is in the background`,
+  codeLang: `bash`,
+  keyPoints: [`Simulate a low-memory kill, not a user force stop.`, `Return through Recents, not the launcher icon.`, `Rotation and "Don't keep activities" don't kill the process.`],
+  question: `Which test reliably checks that a screen restores its state after process death?`,
+  options: [`Enable "Don't keep activities" and switch apps`, `Rotate the device several times`, `Background the app, kill the process with adb shell am kill, then reopen it from Recents`, `Force stop the app from Settings, then reopen it`],
+  correctIndex: 2,
+  explanation: `adb shell am kill only kills processes that are safe to kill (in the background), mimicking the system's memory reclaim. The task and saved state remain, so reopening from Recents exercises the real restore path.`,
+  whyWrong: [`That destroys activities but keeps the process, so ViewModels and singletons survive.`, `Rotation is a configuration change; the process and ViewModels stay alive.`, ``, `Force stop clears the task's saved state, so the app starts fresh; it doesn't test restoration at all.`],
+  hiddenFact: `Opening the app from the launcher icon after a kill can also lead to a fresh launch, depending on the activity's launch flags. Bugs in process-death handling frequently show up as crashes from lateinit properties or singletons that were initialised on an earlier screen the restored task skips.`,
+  recap: `Test process death with adb shell am kill while backgrounded, then reopen from Recents.`
+},
+{
+  id: 39, difficulty: `hard`, module: `Architecture & DI`,
+  concept: `Main-safety of library suspend functions`,
+  summary: `A main-safe suspend function can be called from the main thread without blocking it. Well-designed libraries make their suspend APIs main-safe themselves. Retrofit's suspend functions enqueue the HTTP call on OkHttp's own threads and suspend until it finishes. Room's suspend DAO functions run queries on Room's executor. Wrapping these calls in withContext(Dispatchers.IO) adds a thread switch but no protection.`,
+  code: `interface UserApi {
+    @GET("users/{id}")
+    suspend fun getUser(@Path("id") id: String): User
+}
+
+class UserRepository(private val api: UserApi) {
+    suspend fun fetch(id: String): User =
+        withContext(Dispatchers.IO) {     // needed?
+            api.getUser(id)
+        }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Main-safe = OK to call from the main thread.`, `Retrofit and Room suspend APIs are main-safe.`, `Your own blocking code still needs withContext.`],
+  question: `Is withContext(Dispatchers.IO) necessary around api.getUser(id)?`,
+  options: [`Yes, because Retrofit suspend functions block the calling thread`, `Yes, or it throws NetworkOnMainThreadException`, `No, because withContext is ignored for network calls`, `No, because Retrofit suspend functions are main-safe and run the I/O on OkHttp's threads`],
+  correctIndex: 3,
+  explanation: `Retrofit's suspend support uses OkHttp's asynchronous enqueue, so the calling thread isn't blocked while waiting. You can call it from Dispatchers.Main directly.`,
+  whyWrong: [`Only Call.execute() blocks; the suspend variant doesn't.`, `The network work never happens on the main thread, so StrictMode's network check isn't triggered.`, `withContext does switch dispatchers; it's just unnecessary here.`, ``],
+  hiddenFact: `Main-safety covers only the library's own work. If you then parse a huge JSON string manually or transform thousands of items, that CPU work runs on the caller's dispatcher and needs withContext(Dispatchers.Default).`,
+  recap: `Retrofit and Room suspend calls are main-safe; wrap only your own blocking or heavy code.`
+},
+{
+  id: 40, difficulty: `hard`, module: `Coroutines & Flow`,
+  concept: `Cooperative cancellation`,
+  summary: `Cancelling a coroutine doesn't stop its thread. It sets the Job to a cancelling state, and the coroutine actually stops only at a suspension point that checks for cancellation (delay, withContext, yield, most kotlinx suspend functions) or when your code checks isActive or calls ensureActive(). A loop of blocking calls with no such checks runs to completion even after cancel().`,
+  code: `runBlocking {
+    val job = launch(Dispatchers.Default) {
+        var i = 0
+        while (i < 5) {
+            Thread.sleep(500)          // blocking, not suspending
+            println("tick $i")
+            i++
+        }
+    }
+    delay(1200)
+    job.cancelAndJoin()
+    println("done")
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Cancellation is cooperative.`, `Blocking calls don't check for cancellation.`, `Use ensureActive(), isActive or yield() in long loops.`],
+  question: `What does this program print?`,
+  options: [`tick 0, tick 1, done`, `tick 0, tick 1, tick 2, done`, `tick 0 through tick 4, then done`, `done only`],
+  correctIndex: 2,
+  explanation: `cancel() at 1.2 s marks the Job as cancelling, but the loop never suspends or checks. It prints all five ticks (finishing at 2.5 s). cancelAndJoin() waits for it to finish, then "done" prints.`,
+  whyWrong: [`That's what you'd get if the loop checked for cancellation; it doesn't.`, `Nothing in the loop reacts to cancellation at any tick.`, ``, `The coroutine starts immediately on Default, so ticks are printed before cancellation is even requested.`],
+  hiddenFact: `A related trap: catch (e: Exception) around suspend calls also catches CancellationException, and the coroutine keeps running after being cancelled. runCatching { } has the same problem. Rethrow CancellationException or catch narrower exception types.`,
+  recap: `Cancellation only takes effect at checks; blocking loops need ensureActive().`
+},
+{
+  id: 41, difficulty: `hard`, module: `Compose`,
+  concept: `Deferring state reads to later phases`,
+  summary: `A Compose frame has three phases: composition (which composables run), layout (measure and place) and drawing. Compose re-runs only from the phase where a changed State was read. Reading state in a composable body invalidates composition. Reading it inside a lambda-based modifier, such as offset { } or drawBehind { }, invalidates only layout or drawing, which is much cheaper.`,
+  code: `val scroll = rememberScrollState()
+
+// A: state read during composition
+Box(Modifier.offset(y = (scroll.value / 2).dp))
+
+// B: state read during layout
+Box(Modifier.offset { IntOffset(0, scroll.value / 2) })`,
+  codeLang: `kotlin`,
+  keyPoints: [`Phases: composition → layout → draw.`, `Changes re-run work from the phase where state was read.`, `Lambda modifiers defer reads past composition.`],
+  question: `For a parallax effect driven by scrolling, why is version B better?`,
+  options: [`The state is read in the layout phase, so scrolling re-runs only placement and skips recomposition`, `Lambda modifiers are compiled to native code`, `The value is read once and cached forever`, `There's no difference; both are optimised to the same code`],
+  correctIndex: 0,
+  explanation: `In A, scroll.value is read while composing, so every scroll pixel recomposes the Box. In B, the read happens inside the offset lambda during placement, so Compose only re-places the Box.`,
+  whyWrong: [``, `Both versions run on the same runtime; the difference is which phase reads the state.`, `The lambda runs again each time the scroll value changes during layout.`, `They behave very differently; Layout Inspector shows A recomposing on every frame.`],
+  hiddenFact: `The same idea applies to Modifier.graphicsLayer { alpha = ... } versus Modifier.alpha(value), and to drawBehind { } for colours that animate. Layout Inspector in Android Studio can show recomposition and skip counts to confirm the optimisation.`,
+  recap: `Read fast-changing state in lambda modifiers to skip composition.`
+},
+{
+  id: 42, difficulty: `hard`, module: `Performance & Internals`,
+  concept: `Baseline Profiles`,
+  summary: `Android Runtime (ART) runs app code first in an interpreter, then JIT-compiles hot methods, and later compiles them ahead of time using profiles collected on the device. Fresh installs therefore start slow until profiles build up. A Baseline Profile ships a list of important classes and methods inside your app so ART can compile them ahead of time at install, making first launches and key journeys faster.`,
+  code: `@RunWith(AndroidJUnit4::class)
+class BaselineProfileGenerator {
+    @get:Rule val rule = BaselineProfileRule()
+
+    @Test
+    fun generate() = rule.collect(packageName = "com.example.app") {
+        pressHome()
+        startActivityAndWait()
+        // scroll the feed, open a detail screen...
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`ART: interpret → JIT → profile-guided AOT.`, `A Baseline Profile supplies that profile from day one.`, `Generated with Macrobenchmark's BaselineProfileRule.`],
+  question: `What does a Baseline Profile actually do?`,
+  options: [`Shrinks the APK by removing unused code`, `Turns on R8 full mode`, `Disables garbage collection during startup`, `Lists hot classes and methods so ART can compile them ahead of time at install, instead of interpreting and JIT-compiling them first`],
+  correctIndex: 3,
+  explanation: `The profile tells ART which code matters during startup and critical journeys. ART compiles that code ahead of time at install, so it runs as machine code from the first launch.`,
+  whyWrong: [`Shrinking is R8's job; profiles don't remove code.`, `R8 configuration is separate from ART compilation profiles.`, `Garbage collection isn't affected by profiles.`, ``],
+  hiddenFact: `Google reports Baseline Profiles typically improve code execution speed by around 30% from the first launch. They are installed through the ProfileInstaller library and Play's cloud profiles, so sideloaded debug builds don't show the benefit; measure with release builds and Macrobenchmark.`,
+  recap: `Baseline Profiles let ART precompile hot code at install for fast first runs.`
+},
+{
+  id: 43, difficulty: `hard`, module: `Performance & Internals`,
+  concept: `R8 and reflection`,
+  summary: `R8 shrinks, optimises and obfuscates release builds. It removes classes, methods and fields it believes are unused and renames the rest to short names. It can only see code paths that are referenced statically. Anything reached only by reflection, such as fields filled by a reflection-based JSON parser, looks unused or gets renamed unless keep rules protect it.`,
+  code: `// Parsed with Gson (reflection-based)
+data class UserDto(
+    val id: String,
+    val displayName: String
+)
+
+// Debug: UserDto(id=42, displayName=Asha)
+// Release: UserDto(id=null, displayName=null)   ← ?`,
+  codeLang: `kotlin`,
+  keyPoints: [`R8 removes and renames what it can't see used.`, `Reflection hides usage from R8.`, `Use keep rules, @SerializedName or codegen-based libraries.`],
+  question: `Debug builds parse JSON correctly; release builds produce objects with null fields. What's the most likely cause?`,
+  options: [`A Gson bug that only appears in release mode`, `R8 renamed or removed the DTO's fields because they're only used through reflection; add keep rules or @SerializedName`, `Release builds use a different JVM`, `ProGuard and R8 are disabled in release builds`],
+  correctIndex: 1,
+  explanation: `Gson matches JSON keys to field names via reflection. After R8 renames displayName to something like a, no JSON key matches and the field stays at its default. Keep rules or @SerializedName annotations preserve the mapping.`,
+  whyWrong: [`Gson behaves the same; the class it's given has changed.`, ``, `Android runs ART in both build types; there's no JVM.`, `If minification were off, the bug wouldn't happen; it's because R8 is on.`],
+  hiddenFact: `Since Android Gradle Plugin 8.0, R8 runs in full mode by default. It's more aggressive and can, for example, remove default constructors that reflection-based code expects. Libraries like kotlinx.serialization and Moshi's codegen generate adapters at compile time, so R8 can see every use.`,
+  recap: `Release-only nulls or crashes with reflection usually mean missing R8 keep rules.`
+},
+{
+  id: 44, difficulty: `hard`, module: `Data & Background Work`,
+  concept: `Foreground service types`,
+  summary: `A foreground service performs user-noticeable work while showing a persistent notification. Android has tightened the rules over several versions. Since Android 8 background services are restricted. Since Android 14 (target API 34), every foreground service must declare one or more foregroundServiceType values in the manifest and hold the matching FOREGROUND_SERVICE_* permission.`,
+  code: `<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
+<service
+    android:name=".TrackingService"
+    android:foregroundServiceType="location"
+    android:exported="false" />`,
+  codeLang: `xml`,
+  keyPoints: [`Foreground service = visible notification + user-noticeable work.`, `Target 34+: a type is required.`, `Each type has its own permission and conditions.`],
+  question: `Your app targets API 34 and starts a location-tracking foreground service without declaring android:foregroundServiceType. What happens on Android 14?`,
+  options: [`It works the same as on Android 13`, `Lint warns, but runtime behaviour is unchanged`, `startForeground() throws MissingForegroundServiceTypeException`, `The system silently runs it as a background service`],
+  correctIndex: 2,
+  explanation: `For apps targeting API 34, calling startForeground() for a service with no declared type throws MissingForegroundServiceTypeException.`,
+  whyWrong: [`Behaviour changes based on target SDK; at 34 the type is mandatory.`, `The failure is a runtime exception, not just a Lint warning.`, ``, `The system doesn't silently downgrade it; it fails.`],
+  hiddenFact: `After startForegroundService(), the service has only a few seconds to call startForeground(), or the app crashes (ForegroundServiceDidNotStartInTimeException on recent versions). A location-type service also needs the user to have granted a location runtime permission.`,
+  recap: `Target 34+: declare foregroundServiceType and its matching permission.`
+},
+{
+  id: 45, difficulty: `hard`, module: `Performance & Internals`,
+  concept: `Binder size limits`,
+  summary: `Every interaction between your app and system services crosses process boundaries through Binder IPC. That includes starting activities with extras and saving instance state when the app goes to the background. Each process has a limited Binder transaction buffer of about 1 MB, shared by all transactions in progress at that moment. Large Bundles can overflow it.`,
+  code: `override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    outState.putParcelableArrayList("items", ArrayList(allItems))  // 5,000 items
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Intents and saved state travel through Binder.`, `The buffer is ~1 MB per process, shared.`, `Keep saved state small: ids, not data.`],
+  question: `The app crashes with TransactionTooLargeException whenever the user presses Home on a list screen. What's the most likely cause?`,
+  options: [`The saved-state Bundle (a big list in outState, SavedStateHandle or navigation arguments) exceeds the Binder transaction buffer`, `The network response was too large`, `Too many threads were created`, `The Room database file is too big`],
+  correctIndex: 0,
+  explanation: `Pressing Home stops the Activity, and its saved state is sent to the system process through Binder. Thousands of parcelled items easily exceed the buffer, so the transaction fails.`,
+  whyWrong: [``, `Network data doesn't go through Binder unless you put it into a Bundle.`, `Thread count doesn't affect Binder transaction size.`, `The database lives on disk; its size doesn't pass through Binder.`],
+  hiddenFact: `Since Android 7.0 (API 24) this throws an exception; before that it was only logged and state was silently lost. Android's guidance is to keep saved state under about 50 KB. The open-source TooLargeTool library can log Bundle sizes to find the culprit.`,
+  recap: `Save only ids in Bundles; large saved state crashes with TransactionTooLargeException.`
+},
+{
+  id: 46, difficulty: `hard`, module: `Platform & Security`,
+  concept: `PendingIntent mutability`,
+  summary: `A PendingIntent lets another app or the system run an Intent later with your app's identity and permissions, for example when a notification is tapped. If it's mutable, the receiving app can fill in parts of the Intent, which is a security risk if misused. Since Android 12 (target API 31), you must declare explicitly whether each PendingIntent is immutable or mutable.`,
+  code: `val pi = PendingIntent.getActivity(
+    context,
+    0,
+    Intent(context, OrderActivity::class.java),
+    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+)`,
+  codeLang: `kotlin`,
+  keyPoints: [`PendingIntent = deferred Intent that runs with your app's identity.`, `Target 31+: FLAG_IMMUTABLE or FLAG_MUTABLE is mandatory.`, `Prefer immutable.`],
+  question: `Your app targets API 34. You call PendingIntent.getActivity(ctx, 0, intent, 0). What happens?`,
+  options: [`It defaults to mutable`, `It defaults to immutable`, `It works the same as before Android 12`, `It throws IllegalArgumentException, because you must set FLAG_IMMUTABLE or FLAG_MUTABLE`],
+  correctIndex: 3,
+  explanation: `When targeting API 31 or higher, creating a PendingIntent without either mutability flag throws IllegalArgumentException. Google removed the implicit default to force a conscious security choice.`,
+  whyWrong: [`Mutable was the old implicit default; it no longer applies.`, `There's no implicit default in either direction for target 31+.`, `Target 31+ changes the behaviour; the call fails.`, ``],
+  hiddenFact: `Use FLAG_MUTABLE only when the system must fill in data, such as inline reply or bubbles. Android 14 (target 34) goes further: creating a mutable PendingIntent with an implicit Intent throws unless you opt in with FLAG_ALLOW_UNSAFE_IMPLICIT_INTENT. Also, PendingIntents with the same request code and an equal Intent are the same object; extras are only replaced with FLAG_UPDATE_CURRENT.`,
+  recap: `Target 31+: every PendingIntent needs FLAG_IMMUTABLE or FLAG_MUTABLE.`
+},
+{
+  id: 47, difficulty: `hard`, module: `Platform & Security`,
+  concept: `Runtime permission denial rules`,
+  summary: `Dangerous permissions (camera, location, notifications on Android 13+) must be requested at runtime. Since Android 11, if the user taps Deny for the same permission more than once during the app's lifetime on a device, the system treats it as "don't ask again". Later requests return a denial immediately without showing any dialog, and only the Settings screen can grant it.`,
+  code: `val launcher = registerForActivityResult(
+    ActivityResultContracts.RequestPermission()
+) { granted ->
+    if (!granted && !shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+        showOpenSettingsHint()     // likely permanently denied
+    }
+}
+
+launcher.launch(Manifest.permission.CAMERA)`,
+  codeLang: `kotlin`,
+  keyPoints: [`Android 11+: two denials = no more dialogs.`, `The result is delivered as denied without UI.`, `Recovery is via app settings.`],
+  question: `On Android 11+, the user has tapped Deny twice for the camera permission. What happens the next time you call launcher.launch(CAMERA)?`,
+  options: [`The permission dialog appears again as normal`, `No dialog is shown and the callback immediately reports denied; you need to guide the user to Settings`, `The app crashes with SecurityException`, `The permission is granted automatically after two requests`],
+  correctIndex: 1,
+  explanation: `After the second denial, the system stops showing the dialog for that permission. Requests are answered immediately with "denied", so the app should explain why it needs the permission and offer a shortcut to its settings page.`,
+  whyWrong: [`That's how it worked before the Android 11 change, and only if the user hadn't checked "don't ask again".`, ``, `Requesting a permission never crashes; it just returns a result.`, `Permissions are never auto-granted after denials.`],
+  hiddenFact: `shouldShowRequestPermissionRationale() returns false both before the first request and after permanent denial, so it can't tell those two cases apart alone; you need to remember whether you've asked before. Dismissing the dialog by tapping outside it doesn't count as a denial.`,
+  recap: `Android 11+: two denials end the dialog; direct the user to Settings.`
+},
+{
+  id: 48, difficulty: `hard`, module: `Platform & Security`,
+  concept: `Edge-to-edge enforcement`,
+  summary: `Edge-to-edge means the app draws behind the status bar and navigation bar, and uses window insets to keep content out from under them. For years this was opt-in. On Android 15, apps that target API 35 are edge-to-edge by default: system bars are transparent and the content extends under them, so any inset handling you skipped becomes visible.`,
+  code: `class MainActivity : ComponentActivity() {
+    override fun onCreate(s: Bundle?) {
+        enableEdgeToEdge()               // consistent on older versions too
+        super.onCreate(s)
+        setContent {
+            Scaffold { inner ->          // Scaffold passes inset padding
+                Content(Modifier.padding(inner))
+            }
+        }
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`Target 35 on Android 15 → edge-to-edge enforced.`, `Content must handle WindowInsets.`, `Scaffold and Modifier.safeDrawingPadding help in Compose.`],
+  question: `After raising targetSdk to 35, a bottom button on Android 15 sits under the gesture navigation bar. What changed?`,
+  options: [`A Material Components bug in the button`, `The navigation bar became taller on Android 15`, `Edge-to-edge is now enforced, so the app draws behind system bars and must apply window insets`, `The app theme was reset to the default`],
+  correctIndex: 2,
+  explanation: `Targeting API 35 makes the window extend under the navigation bar on Android 15 devices. Without inset handling, bottom content is drawn underneath it. Applying navigation-bar or safe-drawing insets fixes it.`,
+  whyWrong: [`The button is fine; the window behind it now extends under the bar.`, `Bar sizes didn't change; the app's drawing area did.`, ``, `The theme is unchanged; only window behaviour changed with the target SDK.`],
+  hiddenFact: `Android 15 offered a temporary opt-out attribute (windowOptOutEdgeToEdgeEnforcement), but it's deprecated and stops working for apps that target Android 16 (API 36). Calling enableEdgeToEdge() lets older Android versions behave the same way, so you test one layout.`,
+  recap: `Target 35 on Android 15 = edge-to-edge by default; handle WindowInsets.`
+},
+{
+  id: 49, difficulty: `hard`, module: `Platform & Security`,
+  concept: `Network security configuration`,
+  summary: `Since Android 9 (target API 28), plain-text HTTP is blocked by default; only HTTPS is allowed. The Network Security Configuration file lets you change the rules in XML without code: allow cleartext for specific domains, pin certificates, or trust extra certificate authorities. A debug-overrides section applies only to debuggable builds.`,
+  code: `<!-- res/xml/network_security_config.xml -->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>
+
+<!-- AndroidManifest.xml -->
+<application android:networkSecurityConfig="@xml/network_security_config" />`,
+  codeLang: `xml`,
+  keyPoints: [`Target 28+: cleartext blocked by default.`, `Scope exceptions to specific domains.`, `debug-overrides for debug-only trust settings.`],
+  question: `A request to http://10.0.2.2:8080 (your local dev server, from the emulator) fails with "CLEARTEXT communication not permitted". What's the best fix?`,
+  options: [`Set android:usesCleartextTraffic="true" for the whole app`, `Allow cleartext only for that domain in a network security config, ideally only in debug builds`, `Disable TLS certificate validation in OkHttp`, `Lower targetSdk below 28`],
+  correctIndex: 1,
+  explanation: `A domain-scoped exception allows HTTP to the dev server while all other traffic stays HTTPS-only. Putting the config in a debug source set keeps it out of release builds.`,
+  whyWrong: [`That enables plain HTTP for every domain, a much wider hole than you need.`, ``, `This doesn't affect cleartext at all and makes HTTPS insecure.`, `Lowering the target SDK isn't possible on Play and gives up other platform protections.`],
+  hiddenFact: `Since Android 7.0 (target 24), apps don't trust user-installed CA certificates by default. That's why debugging proxies like Charles or mitmproxy can't see traffic unless the app trusts user CAs in debug-overrides.`,
+  recap: `Allow cleartext per domain in a network security config, not app-wide.`
+},
+{
+  id: 50, difficulty: `hard`, module: `Performance & Internals`,
+  concept: `Multiple processes`,
+  summary: `Components can run in a separate process with the android:process attribute, for example to isolate a crash-prone SDK or a sync service. Each process is a separate Linux process with its own ART instance and memory. When a process starts, Android creates the Application object in it before any component, just as it does for the main process.`,
+  code: `<service
+    android:name=".SyncService"
+    android:process=":sync" />
+
+class App : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        Analytics.init(this)        // runs in which processes?
+        Database.warmUp(this)
+    }
+}`,
+  codeLang: `kotlin`,
+  keyPoints: [`android:process = separate memory space.`, `Application.onCreate runs in every process.`, `Singletons are per process, not per app.`],
+  question: `What happens when SyncService's :sync process starts?`,
+  options: [`A new Application instance is created in that process and onCreate runs again; singletons there are separate copies`, `Only the service is created; the Application class isn't instantiated`, `It shares Kotlin objects and in-memory caches with the main process`, `The app crashes because Application can't be created twice`],
+  correctIndex: 0,
+  explanation: `Every process of your app gets its own Application instance, so App.onCreate() runs in :sync too. Analytics and Database are initialised again there, and any object in memory is a separate copy that doesn't share state with the main process.`,
+  whyWrong: [``, `The Application is always created first in every process.`, `Processes don't share memory; you'd need IPC (Binder, ContentProvider, files) to share state.`, `Creating one Application per process is normal and expected.`],
+  hiddenFact: `Duplicate initialisation in extra processes slows them down and can corrupt files or databases that assume a single writer. Application.getProcessName() (API 28+) lets you skip heavy init outside the main process. SharedPreferences' MODE_MULTI_PROCESS is deprecated because it was never reliable across processes.`,
+  recap: `Each process gets its own Application and its own singletons.`
+}
+);
+
+</script>
+<script>
+(function () {
+  const STORE_KEY = "android-mastery-50-v1";
+  const LEVELS = ["easy", "medium", "hard"];
+  const LEVEL_NAME = { easy: "Easy", medium: "Medium", hard: "Hard" };
+  const MODULES = [];
+  ITEMS.forEach(it => { if (!MODULES.includes(it.module)) MODULES.push(it.module); });
+  const byId = Object.fromEntries(ITEMS.map(it => [it.id, it]));
+
+  let state = { answers: {}, current: 1, mode: "all", retryIds: [], view: "item", recapLevel: null };
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) Object.assign(state, JSON.parse(raw));
+  } catch (e) {}
+  if (!byId[state.current]) state.current = 1;
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const isCorrect = id => state.answers[id] === byId[id].correctIndex;
+  const answered = id => state.answers[id] !== undefined;
+
+  function list() {
+    if (state.mode === "all") return ITEMS.map(i => i.id);
+    if (LEVELS.includes(state.mode)) return ITEMS.filter(i => i.difficulty === state.mode).map(i => i.id);
+    if (state.mode === "retry") return state.retryIds.slice();
+    if (state.mode.startsWith("module:")) { const m = state.mode.slice(7); return ITEMS.filter(i => i.module === m).map(i => i.id); }
+    return ITEMS.map(i => i.id);
+  }
+
+  /* ---------- syntax highlighting ---------- */
+  const RULES = {
+    kotlin: /(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*")|(@\w+)|\b(fun|val|var|class|object|interface|data|override|suspend|return|if|else|while|for|in|by|private|import|is|try|catch|when|super|this|null|true|false|init|throw|get)\b|(\b\d[\d_]*\b)|(\b[A-Z]\w*)/g,
+    xml: /(<!--[\s\S]*?-->)|("[^"]*")|(<\/?[\w.:-]+|\/?>)|([\w:.-]+(?==))/g,
+    bash: /(#[^\n]*)|("[^"]*")|\b(adb|shell|am|kill)\b/g,
+    text: /(<!--[\s\S]*?-->)/g
+  };
+  const CLS = {
+    kotlin: ["c", "s", "a", "k", "n", "t"],
+    xml: ["c", "s", "k", "a"],
+    bash: ["c", "s", "k"],
+    text: ["c"]
+  };
+  function highlight(code, lang) {
+    const re = RULES[lang] || RULES.text, cls = CLS[lang] || CLS.text;
+    re.lastIndex = 0;
+    let out = "", last = 0, m;
+    while ((m = re.exec(code))) {
+      if (m[0] === "") { re.lastIndex++; continue; }
+      out += esc(code.slice(last, m.index));
+      let g = 1; while (g < m.length && m[g] === undefined) g++;
+      out += '<span class="tk-' + cls[g - 1] + '">' + esc(m[0]) + "</span>";
+      last = m.index + m[0].length;
+    }
+    return out + esc(code.slice(last));
+  }
+
+  /* ---------- rail ---------- */
+  function renderRail() {
+    const seg = $("seg");
+    seg.innerHTML = ["all", ...LEVELS].map(m =>
+      '<button type="button" data-mode="' + m + '" aria-pressed="' + (state.mode === m) + '">' + (m === "all" ? "All" : LEVEL_NAME[m]) + "</button>").join("");
+
+    const inList = new Set(list());
+    $("stack").innerHTML = LEVELS.map(lv => {
+      const items = ITEMS.filter(i => i.difficulty === lv);
+      const got = items.filter(i => isCorrect(i.id)).length, done = items.filter(i => answered(i.id)).length;
+      return '<div class="stack-row"><small>' + LEVEL_NAME[lv] + " · Q" + items[0].id + "–" + items[items.length - 1].id +
+        " · " + got + "/" + done + ' correct</small><div class="cells">' +
+        items.map(i => {
+          let c = "cell";
+          if (answered(i.id)) c += isCorrect(i.id) ? " ok" : " bad";
+          if (state.view === "item" && i.id === state.current) c += " current";
+          if (!inList.has(i.id)) c += " dim";
+          const st = answered(i.id) ? (isCorrect(i.id) ? "correct" : "wrong") : "not answered";
+          return '<button type="button" class="' + c + '" data-go="' + i.id + '" aria-label="Question ' + i.id + ", " + esc(i.concept) + ", " + st + '">' + i.id + "</button>";
+        }).join("") + "</div></div>";
+    }).join("");
+
+    $("modules").innerHTML = MODULES.map(m => {
+      const items = ITEMS.filter(i => i.module === m);
+      const got = items.filter(i => isCorrect(i.id)).length;
+      return '<button type="button" data-mode="module:' + esc(m) + '" aria-pressed="' + (state.mode === "module:" + m) + '"><span>' + esc(m) + "</span><em>" + got + "/" + items.length + "</em></button>";
+    }).join("");
+
+    const note = $("modeNote");
+    if (state.mode === "retry") { note.hidden = false; note.innerHTML = "Retry mode: " + state.retryIds.length + (state.retryIds.length === 1 ? " question" : " questions") + " you missed.<button class='btn' type='button' data-mode='all'>Exit</button>"; }
+    else if (state.mode.startsWith("module:")) { note.hidden = false; note.textContent = "Showing module: " + state.mode.slice(7); }
+    else note.hidden = true;
+
+    const total = ITEMS.length, done = ITEMS.filter(i => answered(i.id)).length, got = ITEMS.filter(i => isCorrect(i.id)).length;
+    $("progText").textContent = done + " / " + total + " answered";
+    $("scoreText").textContent = "Score " + got + (done ? " (" + Math.round(got / done * 100) + "%)" : "");
+    $("barOk").style.width = (got / total * 100) + "%";
+    $("barBad").style.width = ((done - got) / total * 100) + "%";
+    $("railToggleMeta").textContent = "Q" + state.current + " · " + got + " correct";
+  }
+
+  /* ---------- item view ---------- */
+  function renderItem() {
+    const it = byId[state.current];
+    const ids = list(), pos = ids.indexOf(it.id);
+    const ans = state.answers[it.id];
+    const done = ans !== undefined;
+    const letters = ["A", "B", "C", "D"];
+    let h = "";
+    h += '<div class="meta"><span class="qno">Q' + String(it.id).padStart(2, "0") + '</span><span class="pill ' + it.difficulty + '">' + LEVEL_NAME[it.difficulty] + "</span><span>" + esc(it.module) + "</span>" +
+      (pos >= 0 ? "<span>· " + (pos + 1) + " of " + ids.length + "</span>" : "") + "</div>";
+    h += '<h2 class="concept">' + esc(it.concept) + "</h2>";
+    h += '<p class="summary">' + esc(it.summary) + "</p>";
+    if (it.code) {
+      h += '<div class="code"><div class="code-head"><span>' + esc(it.codeLang) + '</span><button type="button" data-copy>Copy</button></div><pre><code>' + highlight(it.code, it.codeLang) + "</code></pre></div>";
+    }
+    h += '<ul class="keypoints">' + it.keyPoints.map(k => "<li>" + esc(k) + "</li>").join("") + "</ul>";
+    h += '<div class="divider">Check yourself</div>';
+    h += '<p class="question" id="qtext">' + esc(it.question) + "</p>";
+    h += '<div class="options" role="group" aria-labelledby="qtext">' + it.options.map((o, i) => {
+      let c = "opt";
+      if (done) { if (i === it.correctIndex) c += " correct"; else if (i === ans) c += " wrong"; else c += " muted"; }
+      return '<button type="button" class="' + c + '" data-opt="' + i + '"' + (done ? " disabled" : "") + "><b>" + letters[i] + "</b><span>" + esc(o) + "</span></button>";
+    }).join("") + "</div>";
+    if (done) {
+      const ok = ans === it.correctIndex;
+      h += '<section class="feedback" aria-live="polite">';
+      h += '<div class="verdict ' + (ok ? "ok" : "bad") + '">' + (ok ? "Correct." : "Not quite. The answer is " + letters[it.correctIndex] + ".") + "</div>";
+      h += '<div class="fb-block"><h3>Why ' + letters[it.correctIndex] + " is right</h3><p>" + esc(it.explanation) + "</p></div>";
+      h += '<div class="fb-block"><h3>Why the others are wrong</h3><ul class="why-wrong">' +
+        it.whyWrong.map((w, i) => i === it.correctIndex ? "" : "<li><code>" + letters[i] + "</code><span>" + esc(w) + "</span></li>").join("") + "</ul></div>";
+      h += '<div class="fb-block gotcha"><h3>Hidden fact</h3><p>' + esc(it.hiddenFact) + "</p></div>";
+      h += '<div class="recap">' + esc(it.recap) + "</div>";
+      h += "</section>";
+    }
+    h += '<div class="nav"><button type="button" class="btn" data-nav="prev"' + (pos <= 0 ? " disabled" : "") + '>← Previous</button>' +
+      '<span class="hint"><kbd>A</kbd>–<kbd>D</kbd> answer · <kbd>←</kbd><kbd>→</kbd> move</span>' +
+      '<button type="button" class="btn primary" data-nav="next">' + nextLabel() + "</button></div>";
+    $("main").innerHTML = h;
+  }
+
+  function nextLabel() {
+    const ids = list(), pos = ids.indexOf(state.current);
+    const cur = byId[state.current], nxt = byId[ids[pos + 1]];
+    if (!nxt) return state.mode === "all" || LEVELS.includes(state.mode) ? "Finish level →" : "See results →";
+    if (nxt.difficulty !== cur.difficulty) return "Finish level →";
+    return "Next →";
+  }
+
+  function goNext() {
+    if (state.view !== "item") return;
+    const ids = list(), pos = ids.indexOf(state.current);
+    const cur = byId[state.current], nxt = byId[ids[pos + 1]];
+    const levelMode = state.mode === "all" || LEVELS.includes(state.mode);
+    if (levelMode && (!nxt || nxt.difficulty !== cur.difficulty)) { state.view = "recap"; state.recapLevel = cur.difficulty; }
+    else if (!nxt) state.view = "results";
+    else state.current = nxt.id;
+    update(true);
+  }
+  function goPrev() {
+    if (state.view !== "item") return;
+    const ids = list(), pos = ids.indexOf(state.current);
+    if (pos > 0) { state.current = ids[pos - 1]; update(true); }
+  }
+
+  /* ---------- recap and results ---------- */
+  function renderRecap() {
+    const lv = state.recapLevel, items = ITEMS.filter(i => i.difficulty === lv);
+    const done = items.filter(i => answered(i.id)).length, got = items.filter(i => isCorrect(i.id)).length;
+    const nextLv = LEVELS[LEVELS.indexOf(lv) + 1];
+    const cont = state.mode === "all" && nextLv;
+    let h = '<div class="meta"><span class="pill ' + lv + '">' + LEVEL_NAME[lv] + "</span><span>Level recap</span></div>";
+    h += '<h2 class="concept">' + LEVEL_NAME[lv] + " level complete</h2>";
+    h += '<div class="big">' + got + "<small> / " + items.length + " correct" + (done < items.length ? " · " + (items.length - done) + " unanswered" : "") + "</small></div>";
+    h += '<div class="sheet"><div><h3>What this level taught you</h3><ol>' + items.map(i => '<li value="' + i.id + '">' + esc(i.recap) + "</li>").join("") + "</ol></div></div>";
+    h += '<div class="row-actions">' + (cont ? '<button type="button" class="btn primary" data-act="continue">Start ' + LEVEL_NAME[nextLv] + " →</button>" : '<button type="button" class="btn primary" data-act="results">See full results →</button>') +
+      '<button type="button" class="btn" data-act="review">Review this level</button></div>';
+    $("main").innerHTML = h;
+  }
+
+  function renderResults() {
+    const done = ITEMS.filter(i => answered(i.id)).length, got = ITEMS.filter(i => isCorrect(i.id)).length;
+    const wrong = ITEMS.filter(i => answered(i.id) && !isCorrect(i.id));
+    let h = '<div class="meta"><span>Results</span></div><h2 class="concept">Your Android scorecard</h2>';
+    h += '<div class="big">' + got + "<small> / 50 correct · " + done + " answered</small></div>";
+    h += '<div class="stats">' + LEVELS.map(lv => {
+      const items = ITEMS.filter(i => i.difficulty === lv), g = items.filter(i => isCorrect(i.id)).length, d = items.filter(i => answered(i.id)).length;
+      return '<div class="stat"><strong>' + g + " / " + items.length + "</strong><span>" + LEVEL_NAME[lv] + " · " + d + " answered</span></div>";
+    }).join("") + "</div>";
+    h += '<div><p class="label">By module</p><div class="mod-bars">' + MODULES.map(m => {
+      const items = ITEMS.filter(i => i.module === m), g = items.filter(i => isCorrect(i.id)).length, d = items.filter(i => answered(i.id)).length;
+      return '<div class="mod-bar"><span>' + esc(m) + "</span><em>" + g + "/" + items.length + '</em><div class="bar"><i class="b-ok" style="width:' + (g / items.length * 100) + '%"></i><i class="b-bad" style="width:' + ((d - g) / items.length * 100) + '%"></i></div></div>';
+    }).join("") + "</div></div>";
+    h += '<div><p class="label">Answered wrong (' + wrong.length + ")</p>" + (wrong.length ? '<div class="wrong-list">' + wrong.map(i => '<button type="button" data-go="' + i.id + '">Q' + i.id + " · " + esc(i.concept) + "</button>").join("") + "</div>" : "<p>None so far.</p>") + "</div>";
+    h += '<div class="row-actions"><button type="button" class="btn primary" data-act="retry"' + (wrong.length ? "" : " disabled") + ">Retry wrong answers</button>" +
+      '<button type="button" class="btn" data-act="start">Back to questions</button>' +
+      '<button type="button" class="btn danger" data-act="reset" id="resetBtn">Reset all progress</button></div>';
+    h += '<div class="sheet"><p class="label">Cheat sheet: all 50 recaps</p>' + MODULES.map(m =>
+      "<div><h3>" + esc(m) + "</h3><ol>" + ITEMS.filter(i => i.module === m).map(i => '<li value="' + i.id + '">' + esc(i.recap) + "</li>").join("") + "</ol></div>").join("") + "</div>";
+    $("main").innerHTML = h;
+  }
+
+  function update(focus) {
+    if (state.view === "item") renderItem();
+    else if (state.view === "recap") renderRecap();
+    else renderResults();
+    renderRail();
+    save();
+    if (focus) { $("main").focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: "auto" }); }
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+    const ids = list();
+    if (!ids.includes(state.current)) state.current = ids.find(id => !answered(id)) || ids[0];
+    state.view = "item";
+    update(true);
+  }
+
+  function answer(i) {
+    const it = byId[state.current];
+    if (state.view !== "item" || answered(it.id) || i < 0 || i > 3) return;
+    state.answers[it.id] = i;
+    update(false);
+    const fb = document.querySelector(".feedback");
+    if (fb && window.innerWidth < 900) fb.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  let resetArmed = false;
+  document.addEventListener("click", e => {
+    const t = e.target.closest("button");
+    if (!t) return;
+    if (t.dataset.opt !== undefined) return answer(+t.dataset.opt);
+    if (t.dataset.go) { if (!list().includes(+t.dataset.go)) state.mode = "all"; state.current = +t.dataset.go; state.view = "item"; $("rail").classList.remove("open"); return update(true); }
+    if (t.dataset.mode) return setMode(t.dataset.mode);
+    if (t.dataset.nav === "next") return goNext();
+    if (t.dataset.nav === "prev") return goPrev();
+    if (t.hasAttribute("data-copy")) {
+      const code = byId[state.current].code;
+      const pre = t.closest(".code").querySelector("pre");
+      const fallback = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); t.textContent = "Selected"; };
+      try { navigator.clipboard.writeText(code).then(() => { t.textContent = "Copied"; setTimeout(() => t.textContent = "Copy", 1500); }, fallback); } catch (err) { fallback(); }
+      return;
+    }
+    if (t.id === "resultsBtn") { state.view = "results"; return update(true); }
+    if (t.id === "railToggle") { const r = $("rail"); r.classList.toggle("open"); t.setAttribute("aria-expanded", r.classList.contains("open")); return; }
+    const act = t.dataset.act;
+    if (act === "continue") { const nextLv = LEVELS[LEVELS.indexOf(state.recapLevel) + 1]; state.current = ITEMS.find(i => i.difficulty === nextLv).id; state.view = "item"; return update(true); }
+    if (act === "results") { state.view = "results"; return update(true); }
+    if (act === "review") { state.mode = state.recapLevel; state.current = ITEMS.find(i => i.difficulty === state.recapLevel).id; state.view = "item"; return update(true); }
+    if (act === "start") { state.view = "item"; if (!list().includes(state.current)) state.mode = "all"; return update(true); }
+    if (act === "retry") {
+      const wrong = ITEMS.filter(i => answered(i.id) && !isCorrect(i.id)).map(i => i.id);
+      if (!wrong.length) return;
+      wrong.forEach(id => delete state.answers[id]);
+      state.retryIds = wrong; state.mode = "retry"; state.current = wrong[0]; state.view = "item";
+      return update(true);
+    }
+    if (act === "reset") {
+      if (!resetArmed) { resetArmed = true; t.classList.add("armed"); t.textContent = "Tap again to erase everything"; setTimeout(() => { resetArmed = false; if (t.isConnected) { t.classList.remove("armed"); t.textContent = "Reset all progress"; } }, 3000); return; }
+      resetArmed = false;
+      state = { answers: {}, current: 1, mode: "all", retryIds: [], view: "item", recapLevel: null };
+      return update(true);
+    }
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.closest && e.target.closest("input, textarea")) return;
+    const k = e.key.toLowerCase();
+    const map = { "1": 0, "2": 1, "3": 2, "4": 3, a: 0, b: 1, c: 2, d: 3 };
+    if (k in map && state.view === "item") { e.preventDefault(); answer(map[k]); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); goNext(); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
+  });
+
+  update(false);
+})();
+</script>
+
+</body>
+</html>
