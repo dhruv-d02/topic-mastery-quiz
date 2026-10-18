@@ -8,9 +8,10 @@ Every question teaches something. Each one has a short concept card (summary, co
 
 | Course | Level | Open |
 | --- | --- | --- |
-| Android (Kotlin) | Experienced, interview-prep depth | [Open the course](https://dhruv-d02.github.io/topic-mastery-quiz/android/) · [backup link](https://raw.githack.com/dhruv-d02/topic-mastery-quiz/main/android/index.html) |
+| Android (Kotlin) | Experienced, interview-prep depth | [Open the course](https://dhruv-d02.github.io/topic-mastery-quiz/android/) |
+| RAG: Retrieval-Augmented Generation (Python) | Basic experience | [Open the course](https://dhruv-d02.github.io/topic-mastery-quiz/rag/) |
 
-The main link needs GitHub Pages enabled (Settings → Pages → Deploy from a branch → `main` / root). The backup link serves the same file straight from the repo and works without Pages.
+All courses are also listed at [dhruv-d02.github.io/topic-mastery-quiz](https://dhruv-d02.github.io/topic-mastery-quiz/).
 
 ## What the skill does
 
@@ -39,6 +40,7 @@ Then ask something like: *"Teach me Kubernetes with a 50-question mastery quiz."
 ```
 skills/topic-mastery-quiz/SKILL.md   the skill
 android/index.html                   Android course (served by GitHub Pages)
+rag/index.html                       RAG course
 index.html                           list of courses
 ```
 

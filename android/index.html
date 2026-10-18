@@ -187,8 +187,8 @@ kbd { font-family: var(--font-mono); font-size: 0.72rem; border: 1px solid var(-
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand">
-      <h1>Android Mastery</h1>
-      <span>Experienced level · Kotlin · 50 lessons</span>
+      <h1 id="courseTitle">Course</h1>
+      <span id="courseSub"></span>
     </div>
     <div class="progress" aria-live="polite">
       <div class="progress-row"><span id="progText">0 / 50 answered</span><span id="scoreText">Score 0</span></div>
@@ -224,6 +224,7 @@ kbd { font-family: var(--font-mono); font-size: 0.72rem; border: 1px solid var(-
 
 <script>
 const ITEMS = [];
+const COURSE = {"pageTitle":"Android Mastery 50","title":"Android Mastery","subtitle":"Experienced level · Kotlin · 50 lessons","key":"android-mastery-50-v1","scorecard":"Your Android scorecard"};
 ITEMS.push(
 {
   id: 1, difficulty: `easy`, module: `App Fundamentals`,
@@ -1370,7 +1371,9 @@ class App : Application() {
 </script>
 <script>
 (function () {
-  const STORE_KEY = "android-mastery-50-v1";
+  const STORE_KEY = COURSE.key;
+  document.getElementById("courseTitle").textContent = COURSE.title;
+  document.getElementById("courseSub").textContent = COURSE.subtitle;
   const LEVELS = ["easy", "medium", "hard"];
   const LEVEL_NAME = { easy: "Easy", medium: "Medium", hard: "Hard" };
   const MODULES = [];
@@ -1405,12 +1408,14 @@ class App : Application() {
     kotlin: /(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*")|(@\w+)|\b(fun|val|var|class|object|interface|data|override|suspend|return|if|else|while|for|in|by|private|import|is|try|catch|when|super|this|null|true|false|init|throw|get)\b|(\b\d[\d_]*\b)|(\b[A-Z]\w*)/g,
     xml: /(<!--[\s\S]*?-->)|("[^"]*")|(<\/?[\w.:-]+|\/?>)|([\w:.-]+(?==))/g,
     bash: /(#[^\n]*)|("[^"]*")|\b(adb|shell|am|kill)\b/g,
+    python: /(#[^\n]*)|((?:[rfb]|rb|br)?(?:"""[\s\S]*?"""|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'))|(@\w+)|\b(def|return|import|from|for|in|if|else|elif|not|and|or|None|True|False|with|as|lambda|class|while|break|continue|try|except|raise|pass|yield|is|print|len|range|zip|enumerate|max|min|sum|sorted|any|set|list|dict)\b|(\b\d[\d_.]*\b)|(\b[A-Z]\w*)/g,
     text: /(<!--[\s\S]*?-->)/g
   };
   const CLS = {
     kotlin: ["c", "s", "a", "k", "n", "t"],
     xml: ["c", "s", "k", "a"],
     bash: ["c", "s", "k"],
+    python: ["c", "s", "a", "k", "n", "t"],
     text: ["c"]
   };
   function highlight(code, lang) {
@@ -1550,7 +1555,7 @@ class App : Application() {
   function renderResults() {
     const done = ITEMS.filter(i => answered(i.id)).length, got = ITEMS.filter(i => isCorrect(i.id)).length;
     const wrong = ITEMS.filter(i => answered(i.id) && !isCorrect(i.id));
-    let h = '<div class="meta"><span>Results</span></div><h2 class="concept">Your Android scorecard</h2>';
+    let h = '<div class="meta"><span>Results</span></div><h2 class="concept">' + esc(COURSE.scorecard) + '</h2>';
     h += '<div class="big">' + got + "<small> / 50 correct · " + done + " answered</small></div>";
     h += '<div class="stats">' + LEVELS.map(lv => {
       const items = ITEMS.filter(i => i.difficulty === lv), g = items.filter(i => isCorrect(i.id)).length, d = items.filter(i => answered(i.id)).length;
