@@ -8,7 +8,9 @@ Every question teaches something. Each one has a short concept card (summary, co
 
 | Course | Level | Open |
 | --- | --- | --- |
-| Android (Kotlin) | Experienced, interview-prep depth | [Open the course](https://dhruv-d02.github.io/topic-mastery-quiz/android/) |
+| Android (Kotlin) | Experienced, interview-prep depth | [Open the course](https://dhruv-d02.github.io/topic-mastery-quiz/android/) · [backup link](https://raw.githack.com/dhruv-d02/topic-mastery-quiz/main/android/index.html) |
+
+The main link needs GitHub Pages enabled (Settings → Pages → Deploy from a branch → `main` / root). The backup link serves the same file straight from the repo and works without Pages.
 
 ## What the skill does
 
