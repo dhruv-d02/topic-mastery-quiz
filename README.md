@@ -10,6 +10,7 @@ Every question teaches something. Each one has a short concept card (summary, co
 | --- | --- | --- |
 | Android (Kotlin) | Experienced, interview-prep depth | [Open the course](https://dhruv-d02.github.io/topic-mastery-quiz/android/) |
 | RAG: Retrieval-Augmented Generation (Python) | Basic experience | [Open the course](https://dhruv-d02.github.io/topic-mastery-quiz/rag/) |
+| MCP: Model Context Protocol (Python, JSON) | Beginner starting real work; based on spec 2026-07-28 and Python SDK 2.x | [Open the course](https://dhruv-d02.github.io/topic-mastery-quiz/mcp/) |
 
 All courses are also listed at [dhruv-d02.github.io/topic-mastery-quiz](https://dhruv-d02.github.io/topic-mastery-quiz/).
 
@@ -41,8 +42,11 @@ Then ask something like: *"Teach me Kubernetes with a 50-question mastery quiz."
 skills/topic-mastery-quiz/SKILL.md   the skill
 android/index.html                   Android course (served by GitHub Pages)
 rag/index.html                       RAG course
+mcp/index.html                       MCP course
 index.html                           list of courses
 ```
+
+Courses on fast-moving topics state the version they were written against (for example, the MCP course covers spec 2026-07-28 and also explains the older `initialize` handshake you'll still meet in existing servers).
 
 To add a course, generate it with the skill and save it as `<topic>/index.html`, then add a row to the table above and a link in `index.html`.
 

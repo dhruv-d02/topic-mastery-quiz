@@ -1408,6 +1408,7 @@ class App : Application() {
     kotlin: /(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*")|(@\w+)|\b(fun|val|var|class|object|interface|data|override|suspend|return|if|else|while|for|in|by|private|import|is|try|catch|when|super|this|null|true|false|init|throw|get)\b|(\b\d[\d_]*\b)|(\b[A-Z]\w*)/g,
     xml: /(<!--[\s\S]*?-->)|("[^"]*")|(<\/?[\w.:-]+|\/?>)|([\w:.-]+(?==))/g,
     bash: /(#[^\n]*)|("[^"]*")|\b(adb|shell|am|kill)\b/g,
+    json: /(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*")|\b(true|false|null)\b|(-?\b\d+(?:\.\d+)?\b)/g,
     python: /(#[^\n]*)|((?:[rfb]|rb|br)?(?:"""[\s\S]*?"""|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'))|(@\w+)|\b(def|return|import|from|for|in|if|else|elif|not|and|or|None|True|False|with|as|lambda|class|while|break|continue|try|except|raise|pass|yield|is|print|len|range|zip|enumerate|max|min|sum|sorted|any|set|list|dict)\b|(\b\d[\d_.]*\b)|(\b[A-Z]\w*)/g,
     text: /(<!--[\s\S]*?-->)/g
   };
@@ -1416,6 +1417,7 @@ class App : Application() {
     xml: ["c", "s", "k", "a"],
     bash: ["c", "s", "k"],
     python: ["c", "s", "a", "k", "n", "t"],
+    json: ["c", "s", "k", "n"],
     text: ["c"]
   };
   function highlight(code, lang) {
